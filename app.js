@@ -6,14 +6,8 @@ var campanhas = [
   { id: 4, titulo: 'Apoio Emergencial - Vale Verde', ong: 'Instituto Mãos Unidas', endereco: 'Ginásio Municipal Central', horario: 'Todos os dias, 24h', categoria: 'Emergência', urgencia: 'Alta', progresso: 40, icone: '🚨', resumo: 'Água potável, Colchões, Higiene', itens: [{ id: 401, nome: 'Fardo de água potável', qtd: 20, atendido: false }, { id: 402, nome: 'Kit de higiene pessoal', qtd: 15, atendido: false }] }
 ];
 var minhasDoacoes = [{ item: '2x Casaco tamanho 7 anos masculino', local: 'Abrigo Esperança', data: '2026-11-28', status: 'Agendada' }];
-var conversas = [
-  { id: 1, ong: 'Abrigo Esperança', mensagens: [{ tipo: 'enviada', texto: 'Olá, tenho 2 casacos para doar', hora: '10:02 ✓✓' }, { tipo: 'recebida', texto: 'Ótimo! Pode trazer amanhã das 9h às 17h', hora: '10:05' }] },
-  { id: 2, ong: 'Casa da Criança', mensagens: [{ tipo: 'recebida', texto: 'Obrigada pela doação!', hora: 'Ontem' }] }
-];
-var pendenciasAdmin = [
-  { id: 1, nome: 'Instituto Mãos Unidas', tipo: 'Entidade', cnpj: '14.222.333/0001-55', status: 'Pendente' },
-  { id: 2, nome: 'Campanha Natal Sem Fome', tipo: 'Campanha', cnpj: '12.345.678/0001-90', status: 'Pendente' }
-];
+var conversas = [{ id: 1, ong: 'Abrigo Esperança', mensagens: [{ tipo: 'enviada', texto: 'Olá, tenho 2 casacos para doar', hora: '10:02 ✓✓' }, { tipo: 'recebida', texto: 'Ótimo! Pode trazer amanhã das 9h às 17h', hora: '10:05' }] }, { id: 2, ong: 'Casa da Criança', mensagens: [{ tipo: 'recebida', texto: 'Obrigada pela doação!', hora: 'Ontem' }] }];
+var pendenciasAdmin = [{ id: 1, nome: 'Instituto Mãos Unidas', tipo: 'Entidade', cnpj: '14.222.333/0001-55', status: 'Pendente' }, { id: 2, nome: 'Campanha Natal Sem Fome', tipo: 'Campanha', cnpj: '12.345.678/0001-90', status: 'Pendente' }];
 var perfis = {
   doador: { senha: 'doa#2026', tela: 'tela-buscar', tag: 'Doador', cor: 'etiqueta-azul', links: [['Início', 'tela-home'], ['Buscar Campanhas', 'tela-buscar'], ['Minhas Doações', 'tela-minhas-doacoes']] },
   entidade: { senha: 'ent!2026', tela: 'tela-ong-dashboard', tag: 'Entidade', cor: 'etiqueta-verde', links: [['Necessidades (CRUD)', 'tela-ong-dashboard'], ['Nova Campanha', 'tela-ong-nova'], ['Mensagens', 'tela-mensagens']] },
@@ -51,21 +45,14 @@ function desenharBusca() {
   for (var i = 0; i < campanhas.length; i++) { var c = campanhas[i]; if ((c.ong + c.titulo + c.resumo).toLowerCase().indexOf(q) !== -1 && (cat === 'Todas' || c.categoria === cat) && (urg === 'Todas' || c.urgencia === urg)) html += '<article class="card card-instituicao"><div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;"><strong class="titulo-destaque" style="font-size:18px;">' + c.titulo + '</strong><span class="etiqueta etiqueta-verde">✓ Verificada</span><span class="etiqueta etiqueta-vermelha">Urgência ' + c.urgencia + '</span></div><div style="color:#6B5E58;font-size:14px;">' + c.ong + ' • ' + c.endereco + '</div><div style="font-weight:700;font-size:14px;margin-top:4px;">Precisa de: ' + c.resumo + '</div></div><button class="botao botao-primario" onclick="abrirCampanha(' + c.id + ')">Ver Necessidades</button></article>'; }
   el('resultado-busca-lista').innerHTML = html || '<div class="card"><p style="color:#6B5E58;">Nenhuma campanha encontrada.</p></div>';
 }
-function mudarModoBusca(m) {
-  el('resultado-busca-lista').style.display = m === 'lista' ? 'block' : 'none'; el('resultado-busca-mapa').style.display = m === 'mapa' ? 'flex' : 'none';
-  el('btn-modo-lista').className = m === 'lista' ? 'botao botao-primario' : 'botao botao-claro'; el('btn-modo-mapa').className = m === 'mapa' ? 'botao botao-primario' : 'botao botao-claro';
-}
+function mudarModoBusca(m) { el('resultado-busca-lista').style.display = m === 'lista' ? 'block' : 'none'; el('resultado-busca-mapa').style.display = m === 'mapa' ? 'flex' : 'none'; el('btn-modo-lista').className = m === 'lista' ? 'botao botao-primario' : 'botao botao-claro'; el('btn-modo-mapa').className = m === 'mapa' ? 'botao botao-primario' : 'botao botao-claro'; }
 function abrirCampanha(id) {
   campanhaId = id; var c = buscarCampanha(id), html = '';
   el('detalhe-categoria').textContent = c.categoria + ' • Urgência ' + c.urgencia; el('detalhe-titulo').textContent = c.titulo; el('detalhe-subtitulo').textContent = c.ong + ' • ' + c.progresso + '% da meta arrecadada'; el('detalhe-barra').style.width = c.progresso + '%'; el('detalhe-ong-nome').textContent = c.ong; el('detalhe-ong-info').innerHTML = '📍 ' + c.endereco + '<br />🕒 ' + c.horario;
   for (var i = 0; i < c.itens.length; i++) html += c.itens[i].atendido ? '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:12px;margin-bottom:10px;background-color:#E8F9FC;"><span style="color:#6B5E58;text-decoration:line-through;">☑ ' + c.itens[i].nome + '</span><span class="etiqueta etiqueta-azul">Já atendido</span></div>' : '<div style="padding:12px 14px;border-radius:12px;margin-bottom:10px;background-color:#FAF7F5;font-weight:700;">☐ ' + c.itens[i].nome + ' (faltam ' + c.itens[i].qtd + ')</div>';
   el('detalhe-itens').innerHTML = html; mostrarTela('tela-campanha');
 }
-function abrirFormularioDoacao() {
-  var c = buscarCampanha(campanhaId), ops = ''; el('doar-subtitulo').textContent = c.titulo + ' • ' + c.ong; el('doar-ponto').value = c.ong + ' - ' + c.endereco;
-  for (var i = 0; i < c.itens.length; i++) if (!c.itens[i].atendido) ops += '<option value="' + c.itens[i].nome + '">' + c.itens[i].nome + '</option>';
-  el('doar-item').innerHTML = ops; mostrarTela('tela-doar');
-}
+function abrirFormularioDoacao() { var c = buscarCampanha(campanhaId), ops = ''; el('doar-subtitulo').textContent = c.titulo + ' • ' + c.ong; el('doar-ponto').value = c.ong + ' - ' + c.endereco; for (var i = 0; i < c.itens.length; i++) if (!c.itens[i].atendido) ops += '<option value="' + c.itens[i].nome + '">' + c.itens[i].nome + '</option>'; el('doar-item').innerHTML = ops; mostrarTela('tela-doar'); }
 function enviarDoacao(e) {
   e.preventDefault(); var em = el('doar-email').value;
   if (em.indexOf('@') === -1 || em.indexOf('.') === -1) { el('doar-email').classList.add('erro'); el('erro-email').style.display = 'block'; return; }
@@ -73,10 +60,7 @@ function enviarDoacao(e) {
   var d = { item: el('doar-quantidade').value + 'x ' + el('doar-item').value, local: el('doar-ponto').value, data: el('doar-data').value, status: 'Agendada' };
   minhasDoacoes.unshift(d); el('confirmado-resumo').textContent = 'Você registrou: ' + d.item; el('confirmado-ponto').textContent = 'Ponto de coleta: ' + d.local; el('confirmado-data').textContent = 'Data prevista: ' + d.data; mostrarTela('tela-confirmado');
 }
-function desenharMinhasDoacoes() {
-  var html = ''; for (var i = 0; i < minhasDoacoes.length; i++) html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:12px;background-color:#FAF7F5;margin-bottom:10px;flex-wrap:wrap;gap:10px;"><div><strong>' + minhasDoacoes[i].item + '</strong><div style="color:#6B5E58;font-size:13px;">' + minhasDoacoes[i].local + ' • Data: ' + minhasDoacoes[i].data + '</div></div><span class="etiqueta etiqueta-azul">' + minhasDoacoes[i].status + '</span></div>';
-  el('lista-minhas-doacoes').innerHTML = html;
-}
+function desenharMinhasDoacoes() { var html = ''; for (var i = 0; i < minhasDoacoes.length; i++) html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:12px;background-color:#FAF7F5;margin-bottom:10px;flex-wrap:wrap;gap:10px;"><div><strong>' + minhasDoacoes[i].item + '</strong><div style="color:#6B5E58;font-size:13px;">' + minhasDoacoes[i].local + ' • Data: ' + minhasDoacoes[i].data + '</div></div><span class="etiqueta etiqueta-azul">' + minhasDoacoes[i].status + '</span></div>'; el('lista-minhas-doacoes').innerHTML = html; }
 function desenharDashboardOng() {
   var itens = campanhas[0].itens, html = '', pend = 0;
   for (var i = 0; i < itens.length; i++) { var it = itens[i]; if (!it.atendido) pend++; html += '<div class="linha-tabela"><strong>' + it.nome + '</strong><span>' + it.qtd + '</span><span>' + (it.atendido ? '<span class="etiqueta etiqueta-verde">Recebido ✓</span>' : '<span class="etiqueta etiqueta-amarela">Pendente</span>') + '</span><div class="acoes-linha"><button class="botao botao-editar botao-pequeno" onclick="iniciarEdicao(' + it.id + ')">Editar</button><button class="botao botao-excluir botao-pequeno" onclick="excluirNecessidade(' + it.id + ')">Excluir</button>' + (it.atendido ? '' : '<button class="botao botao-primario botao-pequeno" onclick="marcarComoAtendido(' + it.id + ')">Recebido</button>') + '</div></div>'; }
@@ -102,9 +86,6 @@ function desenharChat() {
 }
 function abrirConversa(id) { conversaId = id; desenharChat(); }
 function enviarMensagem() { var txt = el('campo-mensagem').value.trim(); if (!txt) return; for (var i = 0; i < conversas.length; i++) if (conversas[i].id === conversaId) conversas[i].mensagens.push({ tipo: 'enviada', texto: txt, hora: 'Agora ✓✓' }); el('campo-mensagem').value = ''; desenharChat(); }
-function desenharAprovacaoAdmin() {
-  var html = ''; for (var i = 0; i < pendenciasAdmin.length; i++) { var p = pendenciasAdmin[i], acao = p.status === 'Pendente' ? '<div class="acoes-linha"><button class="botao botao-primario botao-pequeno" onclick="alterarStatusAdmin(' + p.id + ',\'Aprovado\')">Aprovar</button><button class="botao botao-excluir botao-pequeno" onclick="alterarStatusAdmin(' + p.id + ',\'Rejeitado\')">Rejeitar</button></div>' : '<span class="etiqueta ' + (p.status === 'Aprovado' ? 'etiqueta-verde' : 'etiqueta-vermelha') + '">' + p.status + '</span>'; html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:12px;background-color:#FAF7F5;margin-bottom:10px;flex-wrap:wrap;gap:10px;"><div><strong>' + p.nome + '</strong><div style="color:#6B5E58;font-size:13px;">' + p.tipo + ' • CNPJ: ' + p.cnpj + '</div></div>' + acao + '</div>'; }
-  el('lista-aprovacao-admin').innerHTML = html;
-}
+function desenharAprovacaoAdmin() { var html = ''; for (var i = 0; i < pendenciasAdmin.length; i++) { var p = pendenciasAdmin[i], acao = p.status === 'Pendente' ? '<div class="acoes-linha"><button class="botao botao-primario botao-pequeno" onclick="alterarStatusAdmin(' + p.id + ',\'Aprovado\')">Aprovar</button><button class="botao botao-excluir botao-pequeno" onclick="alterarStatusAdmin(' + p.id + ',\'Rejeitado\')">Rejeitar</button></div>' : '<span class="etiqueta ' + (p.status === 'Aprovado' ? 'etiqueta-verde' : 'etiqueta-vermelha') + '">' + p.status + '</span>'; html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:12px;background-color:#FAF7F5;margin-bottom:10px;flex-wrap:wrap;gap:10px;"><div><strong>' + p.nome + '</strong><div style="color:#6B5E58;font-size:13px;">' + p.tipo + ' • CNPJ: ' + p.cnpj + '</div></div>' + acao + '</div>'; } el('lista-aprovacao-admin').innerHTML = html; }
 function alterarStatusAdmin(id, st) { for (var i = 0; i < pendenciasAdmin.length; i++) if (pendenciasAdmin[i].id === id) pendenciasAdmin[i].status = st; desenharAprovacaoAdmin(); }
 atualizarMenu(); desenharCampanhasHome();
