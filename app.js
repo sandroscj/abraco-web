@@ -27,41 +27,28 @@ function atualizarMenu() {
   el('botoes-usuario').innerHTML = p ? '<span class="etiqueta ' + p.cor + '">' + p.tag + '</span><button class="botao botao-sair" onclick="fazerLogout()">Sair</button>' : '<button class="botao botao-primario" onclick="mostrarTela(\'tela-login\')">Entrar / Login</button>';
 }
 function mostrarTela(id) {
-  var ts = document.querySelectorAll('.tela');
+  var ts = document.querySelectorAll('.tela'), acoes = { 'tela-home': desenharCampanhasHome, 'tela-buscar': desenharBusca, 'tela-minhas-doacoes': desenharMinhasDoacoes, 'tela-ong-dashboard': desenharDashboardOng, 'tela-mensagens': desenharChat, 'tela-admin-aprovacao': desenharAprovacaoAdmin };
   for (var i = 0; i < ts.length; i++) ts[i].classList.remove('ativa');
   if (el(id)) el(id).classList.add('ativa');
-  window.scrollTo(0, 0);
-  var acoes = { 'tela-home': desenharCampanhasHome, 'tela-buscar': desenharBusca, 'tela-minhas-doacoes': desenharMinhasDoacoes, 'tela-ong-dashboard': desenharDashboardOng, 'tela-mensagens': desenharChat, 'tela-admin-aprovacao': desenharAprovacaoAdmin };
-  if (acoes[id]) acoes[id]();
+  window.scrollTo(0, 0); if (acoes[id]) acoes[id]();
 }
 function validarLogin(e) {
-  e.preventDefault();
-  var u = el('login-usuario').value.trim(), s = el('login-senha').value.trim();
+  e.preventDefault(); var u = el('login-usuario').value.trim(), s = el('login-senha').value.trim();
   if (perfis[u] && perfis[u].senha === s) { perfilAtual = u; el('erro-login').style.display = 'none'; atualizarMenu(); mostrarTela(perfis[u].tela); }
   else el('erro-login').style.display = 'block';
 }
 function fazerLogout() { perfilAtual = 'visitante'; atualizarMenu(); mostrarTela('tela-login'); }
 function buscarCampanha(id) { for (var i = 0; i < campanhas.length; i++) if (campanhas[i].id === id) return campanhas[i]; return campanhas[0]; }
 function irParaBusca() { el('campo-busca-lista').value = el('campo-busca-home').value; mostrarTela('tela-buscar'); }
-function mudarCategoria(cat, btn) {
-  categoriaAtual = cat; var bs = document.querySelectorAll('.filtros-rapidos .chip');
-  for (var i = 0; i < bs.length; i++) bs[i].classList.remove('ativo');
-  btn.classList.add('ativo'); desenharCampanhasHome();
-}
+function mudarCategoria(cat, btn) { categoriaAtual = cat; var bs = document.querySelectorAll('.filtros-rapidos .chip'); for (var i = 0; i < bs.length; i++) bs[i].classList.remove('ativo'); btn.classList.add('ativo'); desenharCampanhasHome(); }
 function desenharCampanhasHome() {
   var q = el('campo-busca-home').value.toLowerCase(), html = '';
-  for (var i = 0; i < campanhas.length; i++) {
-    var c = campanhas[i], cor = c.categoria === 'Emergência' ? 'etiqueta-vermelha' : 'etiqueta-rosa';
-    if ((categoriaAtual === 'Todas' || c.categoria === categoriaAtual) && (c.titulo + c.ong + c.resumo).toLowerCase().indexOf(q) !== -1) html += '<article class="card"><div class="capa-campanha"><span class="etiqueta ' + cor + '">' + c.categoria + '</span><span style="font-size:36px;">' + c.icone + '</span></div><h3 class="titulo-destaque" style="font-size:18px;margin-bottom:6px;">' + c.titulo + '</h3><div style="color:#41BDD9;font-weight:700;font-size:14px;">' + c.ong + ' • ✓ Verificada</div><div class="barra-progresso"><div class="barra-progresso-preenchida" style="width:' + c.progresso + '%;"></div></div><div style="display:flex;justify-content:space-between;align-items:center;"><strong style="font-size:14px;">' + c.progresso + '% arrecadado</strong><button class="botao botao-primario botao-pequeno" onclick="abrirCampanha(' + c.id + ')">Doar agora</button></div></article>';
-  }
+  for (var i = 0; i < campanhas.length; i++) { var c = campanhas[i], cor = c.categoria === 'Emergência' ? 'etiqueta-vermelha' : 'etiqueta-rosa'; if ((categoriaAtual === 'Todas' || c.categoria === categoriaAtual) && (c.titulo + c.ong + c.resumo).toLowerCase().indexOf(q) !== -1) html += '<article class="card"><div class="capa-campanha"><span class="etiqueta ' + cor + '">' + c.categoria + '</span><span style="font-size:36px;">' + c.icone + '</span></div><h3 class="titulo-destaque" style="font-size:18px;margin-bottom:6px;">' + c.titulo + '</h3><div style="color:#41BDD9;font-weight:700;font-size:14px;">' + c.ong + ' • ✓ Verificada</div><div class="barra-progresso"><div class="barra-progresso-preenchida" style="width:' + c.progresso + '%;"></div></div><div style="display:flex;justify-content:space-between;align-items:center;"><strong style="font-size:14px;">' + c.progresso + '% arrecadado</strong><button class="botao botao-primario botao-pequeno" onclick="abrirCampanha(' + c.id + ')">Doar agora</button></div></article>'; }
   el('lista-campanhas-home').innerHTML = html;
 }
 function desenharBusca() {
   var q = el('campo-busca-lista').value.toLowerCase(), cat = document.querySelector('input[name="filtro-cat"]:checked').value, urg = document.querySelector('input[name="filtro-urg"]:checked').value, html = '';
-  for (var i = 0; i < campanhas.length; i++) {
-    var c = campanhas[i];
-    if ((c.ong + c.titulo + c.resumo).toLowerCase().indexOf(q) !== -1 && (cat === 'Todas' || c.categoria === cat) && (urg === 'Todas' || c.urgencia === urg)) html += '<article class="card card-instituicao"><div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;"><strong class="titulo-destaque" style="font-size:18px;">' + c.titulo + '</strong><span class="etiqueta etiqueta-verde">✓ Verificada</span><span class="etiqueta etiqueta-vermelha">Urgência ' + c.urgencia + '</span></div><div style="color:#6B5E58;font-size:14px;">' + c.ong + ' • ' + c.endereco + '</div><div style="font-weight:700;font-size:14px;margin-top:4px;">Precisa de: ' + c.resumo + '</div></div><button class="botao botao-primario" onclick="abrirCampanha(' + c.id + ')">Ver Necessidades</button></article>';
-  }
+  for (var i = 0; i < campanhas.length; i++) { var c = campanhas[i]; if ((c.ong + c.titulo + c.resumo).toLowerCase().indexOf(q) !== -1 && (cat === 'Todas' || c.categoria === cat) && (urg === 'Todas' || c.urgencia === urg)) html += '<article class="card card-instituicao"><div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;"><strong class="titulo-destaque" style="font-size:18px;">' + c.titulo + '</strong><span class="etiqueta etiqueta-verde">✓ Verificada</span><span class="etiqueta etiqueta-vermelha">Urgência ' + c.urgencia + '</span></div><div style="color:#6B5E58;font-size:14px;">' + c.ong + ' • ' + c.endereco + '</div><div style="font-weight:700;font-size:14px;margin-top:4px;">Precisa de: ' + c.resumo + '</div></div><button class="botao botao-primario" onclick="abrirCampanha(' + c.id + ')">Ver Necessidades</button></article>'; }
   el('resultado-busca-lista').innerHTML = html || '<div class="card"><p style="color:#6B5E58;">Nenhuma campanha encontrada.</p></div>';
 }
 function mudarModoBusca(m) {
@@ -87,16 +74,12 @@ function enviarDoacao(e) {
   minhasDoacoes.unshift(d); el('confirmado-resumo').textContent = 'Você registrou: ' + d.item; el('confirmado-ponto').textContent = 'Ponto de coleta: ' + d.local; el('confirmado-data').textContent = 'Data prevista: ' + d.data; mostrarTela('tela-confirmado');
 }
 function desenharMinhasDoacoes() {
-  var html = '';
-  for (var i = 0; i < minhasDoacoes.length; i++) html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:12px;background-color:#FAF7F5;margin-bottom:10px;flex-wrap:wrap;gap:10px;"><div><strong>' + minhasDoacoes[i].item + '</strong><div style="color:#6B5E58;font-size:13px;">' + minhasDoacoes[i].local + ' • Data: ' + minhasDoacoes[i].data + '</div></div><span class="etiqueta etiqueta-azul">' + minhasDoacoes[i].status + '</span></div>';
+  var html = ''; for (var i = 0; i < minhasDoacoes.length; i++) html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:12px;background-color:#FAF7F5;margin-bottom:10px;flex-wrap:wrap;gap:10px;"><div><strong>' + minhasDoacoes[i].item + '</strong><div style="color:#6B5E58;font-size:13px;">' + minhasDoacoes[i].local + ' • Data: ' + minhasDoacoes[i].data + '</div></div><span class="etiqueta etiqueta-azul">' + minhasDoacoes[i].status + '</span></div>';
   el('lista-minhas-doacoes').innerHTML = html;
 }
 function desenharDashboardOng() {
   var itens = campanhas[0].itens, html = '', pend = 0;
-  for (var i = 0; i < itens.length; i++) {
-    var it = itens[i]; if (!it.atendido) pend++;
-    html += '<div class="linha-tabela"><strong>' + it.nome + '</strong><span>' + it.qtd + '</span><span>' + (it.atendido ? '<span class="etiqueta etiqueta-verde">Recebido ✓</span>' : '<span class="etiqueta etiqueta-amarela">Pendente</span>') + '</span><div class="acoes-linha"><button class="botao botao-editar botao-pequeno" onclick="iniciarEdicao(' + it.id + ')">Editar</button><button class="botao botao-excluir botao-pequeno" onclick="excluirNecessidade(' + it.id + ')">Excluir</button>' + (it.atendido ? '' : '<button class="botao botao-primario botao-pequeno" onclick="marcarComoAtendido(' + it.id + ')">Recebido</button>') + '</div></div>';
-  }
+  for (var i = 0; i < itens.length; i++) { var it = itens[i]; if (!it.atendido) pend++; html += '<div class="linha-tabela"><strong>' + it.nome + '</strong><span>' + it.qtd + '</span><span>' + (it.atendido ? '<span class="etiqueta etiqueta-verde">Recebido ✓</span>' : '<span class="etiqueta etiqueta-amarela">Pendente</span>') + '</span><div class="acoes-linha"><button class="botao botao-editar botao-pequeno" onclick="iniciarEdicao(' + it.id + ')">Editar</button><button class="botao botao-excluir botao-pequeno" onclick="excluirNecessidade(' + it.id + ')">Excluir</button>' + (it.atendido ? '' : '<button class="botao botao-primario botao-pequeno" onclick="marcarComoAtendido(' + it.id + ')">Recebido</button>') + '</div></div>'; }
   el('tabela-itens-ong').innerHTML = html; el('kpi-pendentes').textContent = pend; el('kpi-campanhas').textContent = campanhas.length;
 }
 function salvarNecessidade() {
@@ -120,8 +103,7 @@ function desenharChat() {
 function abrirConversa(id) { conversaId = id; desenharChat(); }
 function enviarMensagem() { var txt = el('campo-mensagem').value.trim(); if (!txt) return; for (var i = 0; i < conversas.length; i++) if (conversas[i].id === conversaId) conversas[i].mensagens.push({ tipo: 'enviada', texto: txt, hora: 'Agora ✓✓' }); el('campo-mensagem').value = ''; desenharChat(); }
 function desenharAprovacaoAdmin() {
-  var html = '';
-  for (var i = 0; i < pendenciasAdmin.length; i++) { var p = pendenciasAdmin[i], acao = p.status === 'Pendente' ? '<div class="acoes-linha"><button class="botao botao-primario botao-pequeno" onclick="alterarStatusAdmin(' + p.id + ',\'Aprovado\')">Aprovar</button><button class="botao botao-excluir botao-pequeno" onclick="alterarStatusAdmin(' + p.id + ',\'Rejeitado\')">Rejeitar</button></div>' : '<span class="etiqueta ' + (p.status === 'Aprovado' ? 'etiqueta-verde' : 'etiqueta-vermelha') + '">' + p.status + '</span>'; html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:12px;background-color:#FAF7F5;margin-bottom:10px;flex-wrap:wrap;gap:10px;"><div><strong>' + p.nome + '</strong><div style="color:#6B5E58;font-size:13px;">' + p.tipo + ' • CNPJ: ' + p.cnpj + '</div></div>' + acao + '</div>'; }
+  var html = ''; for (var i = 0; i < pendenciasAdmin.length; i++) { var p = pendenciasAdmin[i], acao = p.status === 'Pendente' ? '<div class="acoes-linha"><button class="botao botao-primario botao-pequeno" onclick="alterarStatusAdmin(' + p.id + ',\'Aprovado\')">Aprovar</button><button class="botao botao-excluir botao-pequeno" onclick="alterarStatusAdmin(' + p.id + ',\'Rejeitado\')">Rejeitar</button></div>' : '<span class="etiqueta ' + (p.status === 'Aprovado' ? 'etiqueta-verde' : 'etiqueta-vermelha') + '">' + p.status + '</span>'; html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:12px;background-color:#FAF7F5;margin-bottom:10px;flex-wrap:wrap;gap:10px;"><div><strong>' + p.nome + '</strong><div style="color:#6B5E58;font-size:13px;">' + p.tipo + ' • CNPJ: ' + p.cnpj + '</div></div>' + acao + '</div>'; }
   el('lista-aprovacao-admin').innerHTML = html;
 }
 function alterarStatusAdmin(id, st) { for (var i = 0; i < pendenciasAdmin.length; i++) if (pendenciasAdmin[i].id === id) pendenciasAdmin[i].status = st; desenharAprovacaoAdmin(); }
