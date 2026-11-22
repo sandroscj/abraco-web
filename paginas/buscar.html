@@ -53,11 +53,16 @@
 
       <div id="resultado-busca-lista"></div>
 
-      <div id="resultado-busca-mapa" class="mapa-simulado" style="display:none;">
-        <button class="pino-mapa" style="top:20%; left:18%;" onclick="abrirCampanha(1)">📍 Abrigo Esperança (Centro)</button>
-        <button class="pino-mapa" style="top:48%; left:50%;" onclick="abrirCampanha(2)">📍 Casa da Criança (Jardim Camburi)</button>
-        <button class="pino-mapa" style="top:72%; left:26%;" onclick="abrirCampanha(3)">📍 Lar Semente Você (Laranjeiras)</button>
-        <span style="color:#6B5E58; font-weight:700;">Mapa de pontos de coleta — clique em um marcador</span>
+      <div id="resultado-busca-mapa" class="card" style="display:none; padding:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <button class="botao botao-primario botao-pequeno" onclick="focarMapa(1, -20.3194, -40.3378)">📍 Abrigo Esperança (Centro)</button>
+            <button class="botao botao-claro botao-pequeno" onclick="focarMapa(2, -20.2580, -40.2680)">📍 Casa da Criança (Jardim Camburi)</button>
+            <button class="botao botao-claro botao-pequeno" onclick="focarMapa(3, -20.1970, -40.2530)">📍 Lar Semente Você (Laranjeiras)</button>
+          </div>
+          <button id="btn-mapa-ver" class="botao botao-coral botao-pequeno" onclick="abrirCampanha(1)">Ver Necessidades →</button>
+        </div>
+        <iframe id="mapa-real" title="Mapa real dos pontos de coleta" src="https://www.openstreetmap.org/export/embed.html?bbox=-40.355%2C-20.332%2C-40.320%2C-20.308&layer=mapnik&marker=-20.3194%2C-40.3378" style="width:100%; height:420px; border:1px solid #E8DFD9; border-radius:14px;"></iframe>
       </div>
     </div>
   </main>
