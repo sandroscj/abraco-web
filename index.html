@@ -4,13 +4,560 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ABRAÇO • Rede Solidária</title>
+
+  <!-- Fontes definidas no Style Guide (Dela Gothic One + Nunito Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Arquivo de estilos -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="app"></div>
+
+  <!-- ============================================
+       BARRA DE NAVEGAÇÃO (TOPO FIXO)
+       ============================================ -->
+  <header class="navbar">
+    <div class="logo-area" onclick="mostrarTela('tela-home')">
+      <span class="logo-caixa">ABRAÇO</span>
+      <span class="logo-texto">Rede Solidária</span>
+    </div>
+
+    <nav class="menu-links">
+      <a class="menu-link" onclick="mostrarTela('tela-home')">Início</a>
+      <a class="menu-link" onclick="mostrarTela('tela-buscar')">Campanhas</a>
+      <a class="menu-link" onclick="mostrarTela('tela-buscar')">Instituições</a>
+      <a class="menu-link" onclick="mostrarTela('tela-mensagens')">Mensagens</a>
+      <a class="menu-link" onclick="mostrarTela('tela-ong-dashboard')">Portal ONG</a>
+    </nav>
+
+    <div class="menu-botoes" id="botoes-usuario">
+      <button class="botao botao-primario" onclick="mostrarTela('tela-mensagens')">👤 Minha Conta</button>
+      <button class="botao botao-sair" onclick="fazerLogout()">Sair</button>
+    </div>
+  </header>
+
+  <!-- ============================================
+       TELA 1: PÁGINA INICIAL (HOME)
+       ============================================ -->
+  <section id="tela-home" class="tela ativa">
+    <div class="hero">
+      <span class="etiqueta etiqueta-rosa-claro">● Campanhas ativas em tempo real</span>
+      <h1>AJUDE QUEM PRECISA,<br />SEM DESPERDÍCIO.</h1>
+      <p>Encontre campanhas urgentes de instituições verificadas perto de você, veja exatamente os itens que faltam e registre sua entrega.</p>
+
+      <!-- Barra de busca principal -->
+      <div class="barra-busca">
+        <span>🔍</span>
+        <input id="campo-busca-home" type="text" placeholder="O que você quer doar hoje? (ex: casaco, arroz, caderno...)" oninput="desenharCampanhasHome()" />
+        <button class="botao botao-primario" onclick="irParaBusca()">Buscar</button>
+      </div>
+
+      <!-- Filtros rápidos por categoria -->
+      <div class="filtros-rapidos">
+        <button class="chip ativo" onclick="mudarCategoria('Todas', this)">Todas</button>
+        <button class="chip" onclick="mudarCategoria('Alimentos', this)">Alimentos</button>
+        <button class="chip" onclick="mudarCategoria('Roupas', this)">Roupas</button>
+        <button class="chip" onclick="mudarCategoria('Material Escolar', this)">Material Escolar</button>
+        <button class="chip chip-urgente" onclick="mudarCategoria('Urgente', this)">🔥 Urgente</button>
+      </div>
+    </div>
+
+    <!-- Lista de Campanhas Urgentes (preenchida pelo JavaScript) -->
+    <div class="container">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <h2 class="titulo-destaque" style="font-size:28px;">Campanhas Urgentes</h2>
+        <a style="color:#8C5535; font-weight:700;" onclick="mostrarTela('tela-buscar')">Ver todas as campanhas →</a>
+      </div>
+      <div id="lista-campanhas-home" class="grade-3"></div>
+    </div>
+
+    <!-- Seção Como Ajudar em 3 Passos -->
+    <div style="background-color:#FFFFFF; padding:48px 0;">
+      <div class="container" style="padding-top:0; padding-bottom:0;">
+        <h2 class="titulo-destaque" style="font-size:26px; margin-bottom:24px;">Como Ajudar em 3 Passos</h2>
+        <div class="grade-3">
+          <div class="card" style="background-color:#FAF7F5; box-shadow:none;">
+            <span class="etiqueta etiqueta-azul" style="margin-bottom:12px;">Passo 1</span>
+            <h3 style="font-size:18px; margin-bottom:6px;">Encontre uma campanha</h3>
+            <p style="color:#6B5E58; font-size:14px;">Filtre por bairro, categoria ou nível de urgência das instituições.</p>
+          </div>
+          <div class="card" style="background-color:#FAF7F5; box-shadow:none;">
+            <span class="etiqueta etiqueta-rosa" style="margin-bottom:12px;">Passo 2</span>
+            <h3 style="font-size:18px; margin-bottom:6px;">Registre sua doação</h3>
+            <p style="color:#6B5E58; font-size:14px;">Escolha o item exato que ainda falta e informe a data de entrega.</p>
+          </div>
+          <div class="card" style="background-color:#FAF7F5; box-shadow:none;">
+            <span class="etiqueta etiqueta-coral" style="margin-bottom:12px;">Passo 3</span>
+            <h3 style="font-size:18px; margin-bottom:6px;">Entregue no local</h3>
+            <p style="color:#6B5E58; font-size:14px;">Leve até o ponto de coleta da ONG verificada sem desperdícios.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção Institucional: Sobre a Rede Abraço -->
+    <div class="secao-sobre">
+      <div class="sobre-esquerda">
+        <h2 class="titulo-destaque" style="font-size:30px;">Sobre a Rede Abraço</h2>
+        <p>A Rede Abraço conecta doadores da comunidade a instituições verificadas com transparência e zero desperdício. Acompanhe o progresso real das campanhas, veja exatamente os itens que ainda faltam e agende sua entrega diretamente no ponto de coleta.</p>
+        <button class="botao botao-coral" onclick="mostrarTela('tela-buscar')">Conhecer Instituições →</button>
+      </div>
+      <div class="sobre-direita">
+        <div class="card-numero">
+          <span class="numero-destaque" style="color:#8C5535;">+500</span>
+          <strong>Doações entregues este ano</strong>
+        </div>
+        <div class="card-numero">
+          <span class="numero-destaque" style="color:#41BDD9;">18</span>
+          <strong>Instituições verificadas na região</strong>
+        </div>
+        <div class="card-numero">
+          <span class="numero-destaque" style="color:#F26D91;">0%</span>
+          <strong>Desperdício com controle de itens atendidos</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Informações Importantes -->
+    <div class="container">
+      <h2 class="titulo-destaque" style="font-size:26px; margin-bottom:24px;">Informações Importantes</h2>
+      <div class="grade-4">
+        <div class="card">
+          <h4 style="color:#8C5535; margin-bottom:8px;">Como funciona a entrega?</h4>
+          <p style="color:#6B5E58; font-size:14px;">Você registra sua intenção no site e entrega na data escolhida no ponto de coleta.</p>
+        </div>
+        <div class="card">
+          <h4 style="color:#8C5535; margin-bottom:8px;">O que é o selo Verificada?</h4>
+          <p style="color:#6B5E58; font-size:14px;">Garante que a instituição teve CNPJ e endereço validados pela equipe da rede.</p>
+        </div>
+        <div class="card">
+          <h4 style="color:#8C5535; margin-bottom:8px;">Por que itens ficam riscados?</h4>
+          <p style="color:#6B5E58; font-size:14px;">Quando a ONG marca como atendido, evitamos doações repetidas em excesso.</p>
+        </div>
+        <div class="card">
+          <h4 style="color:#8C5535; margin-bottom:8px;">Posso cancelar depois?</h4>
+          <p style="color:#6B5E58; font-size:14px;">Sim! Você pode cancelar ou editar sua intenção a qualquer momento.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TELA 2: BUSCA E INSTITUIÇÕES
+       ============================================ -->
+  <section id="tela-buscar" class="tela">
+    <div class="container">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:24px; flex-wrap:wrap;">
+        <div class="barra-busca" style="max-width:760px;">
+          <span>🔍</span>
+          <input id="campo-busca-lista" type="text" placeholder="Procurar instituição ou necessidade..." oninput="desenharBusca()" />
+          <button class="botao botao-primario botao-pequeno" onclick="desenharBusca()">Buscar</button>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <button id="btn-modo-lista" class="botao botao-primario" onclick="mudarModoBusca('lista')">☰ Lista</button>
+          <button id="btn-modo-mapa" class="botao botao-claro" onclick="mudarModoBusca('mapa')">🗺 Mapa</button>
+        </div>
+      </div>
+
+      <div class="layout-busca">
+        <aside class="card">
+          <h3 class="titulo-destaque" style="font-size:20px;">Filtros</h3>
+          <div class="grupo-filtro">
+            <h4>Localização (Bairro)</h4>
+            <label class="opcao-filtro"><input type="checkbox" checked /> Centro</label>
+            <label class="opcao-filtro"><input type="checkbox" /> Jardim Camburi</label>
+            <label class="opcao-filtro"><input type="checkbox" /> Laranjeiras</label>
+          </div>
+          <div class="grupo-filtro">
+            <h4>Faixa Etária</h4>
+            <label class="opcao-filtro"><input type="checkbox" /> 0 a 3 anos</label>
+            <label class="opcao-filtro"><input type="checkbox" checked /> 4 a 7 anos</label>
+            <label class="opcao-filtro"><input type="checkbox" /> 8 a 12 anos</label>
+          </div>
+          <div class="grupo-filtro">
+            <h4>Tipo de Item</h4>
+            <label class="opcao-filtro"><input type="checkbox" checked /> Casacos</label>
+            <label class="opcao-filtro"><input type="checkbox" /> Calçados</label>
+            <label class="opcao-filtro"><input type="checkbox" /> Uniformes</label>
+          </div>
+          <div class="grupo-filtro">
+            <h4>Urgência</h4>
+            <label class="opcao-filtro"><input type="checkbox" checked /> Alta</label>
+            <label class="opcao-filtro"><input type="checkbox" /> Média</label>
+            <label class="opcao-filtro"><input type="checkbox" /> Baixa</label>
+          </div>
+        </aside>
+
+        <!-- Área de resultados em Lista -->
+        <div id="resultado-busca-lista"></div>
+
+        <!-- Área de resultados em Mapa -->
+        <div id="resultado-busca-mapa" class="mapa-simulado" style="display:none;">
+          <button class="pino-mapa" style="top:25%; left:20%;" onclick="abrirCampanha(1)">📍 Abrigo Esperança (Alta)</button>
+          <button class="pino-mapa" style="top:52%; left:54%;" onclick="abrirCampanha(2)">📍 Casa da Criança</button>
+          <button class="pino-mapa" style="top:70%; left:30%;" onclick="abrirCampanha(3)">📍 Lar Semente Você (Alta)</button>
+          <span style="color:#6B5E58; font-weight:700;">Mapa de pontos de coleta — clique em um marcador</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TELA 3: DETALHE DA CAMPANHA
+       ============================================ -->
+  <section id="tela-campanha" class="tela">
+    <div class="container">
+      <div style="background-color:#8C5535; color:#FFFFFF; border-radius:24px; padding:36px 40px; margin-bottom:18px;">
+        <span id="detalhe-categoria" class="etiqueta etiqueta-vermelha" style="margin-bottom:12px;">Roupas • Urgência Alta</span>
+        <h1 id="detalhe-titulo" class="titulo-destaque" style="font-size:34px; margin-bottom:6px;">Campanha do Agasalho 2026</h1>
+        <div id="detalhe-subtitulo" style="color:#F5EDE8; font-weight:600;">Abrigo Esperança • 70% da meta arrecadada</div>
+      </div>
+
+      <div class="barra-progresso" style="height:14px; margin-bottom:28px;">
+        <div id="detalhe-barra" class="barra-progresso-preenchida" style="width:70%;"></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 360px; gap:28px; align-items:start;">
+        <div class="card">
+          <h2 class="titulo-destaque" style="font-size:22px; margin-bottom:16px;">Itens necessários</h2>
+          <div id="detalhe-itens"></div>
+          <button class="botao botao-primario botao-grande" style="margin-top:10px;" onclick="abrirFormularioDoacao()">Registrar Doação</button>
+        </div>
+
+        <div class="card">
+          <h3 class="titulo-destaque" style="font-size:20px; margin-bottom:12px;">Sobre a Instituição</h3>
+          <span class="etiqueta etiqueta-verde" style="margin-bottom:12px;">✓ Verificada</span>
+          <div id="detalhe-ong-nome" style="font-weight:800; font-size:18px; margin-bottom:8px;">Abrigo Esperança</div>
+          <div id="detalhe-ong-info" style="color:#6B5E58; font-size:14px;">📍 Rua Exemplo, 100 - Centro<br />🕒 Seg a Sex, 9h às 17h</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TELA 4: FORMULÁRIO DE DOAÇÃO
+       ============================================ -->
+  <section id="tela-doar" class="tela">
+    <div class="card-central">
+      <h1 class="titulo-destaque" style="font-size:28px; margin-bottom:6px;">Registrar Doação</h1>
+      <div id="doar-subtitulo" style="color:#8C5535; font-weight:700; margin-bottom:24px;">Campanha do Agasalho 2026 • Abrigo Esperança</div>
+
+      <div class="campo-form">
+        <label for="doar-nome">Nome completo</label>
+        <input id="doar-nome" class="input-texto" type="text" value="Juliana Silva" />
+      </div>
+
+      <div class="campo-form">
+        <label for="doar-email">E-mail</label>
+        <input id="doar-email" class="input-texto" type="email" value="juliana.silva@email.com" placeholder="exemplo@dominio.com" />
+        <div id="erro-email" class="mensagem-erro">⚠ Informe um e-mail válido, por exemplo: nome@email.com</div>
+      </div>
+
+      <div class="campo-form">
+        <label for="doar-telefone">Telefone / WhatsApp</label>
+        <input id="doar-telefone" class="input-texto" type="text" value="(27) 99999-0000" />
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 120px; gap:12px;" class="campo-form">
+        <div>
+          <label for="doar-item">Item que vai doar</label>
+          <select id="doar-item" class="input-texto"></select>
+        </div>
+        <div>
+          <label for="doar-quantidade">Quantidade</label>
+          <input id="doar-quantidade" class="input-texto" type="number" min="1" value="2" />
+        </div>
+      </div>
+
+      <div class="campo-form">
+        <label>Data prevista de entrega</label>
+        <div style="display:flex; gap:10px;">
+          <input id="doar-dia" class="input-texto" style="width:76px; text-align:center;" value="15" placeholder="DD" />
+          <input id="doar-mes" class="input-texto" style="width:76px; text-align:center;" value="03" placeholder="MM" />
+          <input id="doar-ano" class="input-texto" style="width:110px; text-align:center;" value="2026" placeholder="YYYY" />
+        </div>
+      </div>
+
+      <div class="campo-form">
+        <label for="doar-ponto">Ponto de Coleta</label>
+        <input id="doar-ponto" class="input-texto" type="text" value="Sede do Abrigo Esperança - Rua Exemplo, 100" />
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:20px;">
+        <button class="botao botao-primario botao-grande" onclick="enviarDoacao()">Confirmar Doação</button>
+        <button class="botao botao-claro botao-grande" onclick="mostrarTela('tela-campanha')">Cancelar</button>
+      </div>
+      <p style="color:#6B5E58; font-size:13px; margin-top:14px;">✉ Você receberá um e-mail de confirmação com os detalhes da entrega.</p>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TELA 5: CONFIRMAÇÃO DA DOAÇÃO
+       ============================================ -->
+  <section id="tela-confirmado" class="tela">
+    <div class="card-central" style="text-align:center;">
+      <div style="width:84px; height:84px; border-radius:999px; background-color:#E8F9FC; color:#41BDD9; font-size:38px; font-weight:800; display:inline-flex; align-items:center; justify-content:center; margin-bottom:18px;">✓</div>
+      <h1 class="titulo-destaque" style="font-size:28px; margin-bottom:20px;">Doação Registrada com Sucesso!</h1>
+
+      <div style="background-color:#FAF7F5; border-radius:16px; padding:22px 26px; text-align:left; margin-bottom:24px;">
+        <div id="confirmado-resumo" style="font-weight:800; font-size:16px; margin-bottom:6px;">Você registrou: 2x Casaco tamanho 7 anos masculino</div>
+        <div id="confirmado-ponto" style="color:#6B5E58; font-size:15px;">Ponto de coleta: Sede do Abrigo Esperança</div>
+        <div id="confirmado-data" style="color:#6B5E58; font-size:15px;">Data prevista: 15/03/2026</div>
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+        <button class="botao botao-primario botao-grande" onclick="alert('Lembrete adicionado ao calendário!')">📅 Adicionar ao Calendário</button>
+        <button class="botao botao-secundario botao-grande" onclick="mostrarTela('tela-buscar')">Ver Outras Campanhas</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TELA 6: LOGIN / CADASTRO (DOADOR OU ONG)
+       ============================================ -->
+  <section id="tela-login" class="tela">
+    <div class="card-central" style="max-width:480px; text-align:center;">
+      <h1 class="titulo-destaque" style="font-size:26px; margin-bottom:16px;">Acesse sua conta</h1>
+
+      <div class="seletor-perfil">
+        <button id="aba-doador" class="ativo" onclick="selecionarPerfilLogin('doador')">Sou Doador</button>
+        <button id="aba-ong" onclick="selecionarPerfilLogin('ong')">Sou ONG / Instituição</button>
+      </div>
+
+      <div style="text-align:left;">
+        <div id="campo-cnpj" class="campo-form" style="display:none;">
+          <label>CNPJ da ONG</label>
+          <input class="input-texto" type="text" placeholder="00.000.000/0001-00" />
+        </div>
+        <div class="campo-form">
+          <label>E-mail</label>
+          <input class="input-texto" type="email" placeholder="exemplo@dominio.com" />
+        </div>
+        <div class="campo-form">
+          <label>Senha</label>
+          <input class="input-texto" type="password" value="12345678" />
+        </div>
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <a style="color:#8C5535; font-weight:700; font-size:14px;">Esqueci minha senha</a>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:10px; align-items:center;">
+        <button class="botao botao-primario botao-grande" style="width:220px;" onclick="fazerLogin()">Entrar</button>
+        <button class="botao botao-secundario" style="width:220px;" onclick="fazerLogin()">Criar nova conta</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TELA 7: DASHBOARD DA ONG
+       ============================================ -->
+  <section id="tela-ong-dashboard" class="tela">
+    <div class="layout-ong">
+      <aside class="sidebar-ong">
+        <div>
+          <div class="titulo-destaque" style="font-size:20px;">ABRAÇO ONG</div>
+          <div style="color:#F29985; font-size:13px; font-weight:700;">Abrigo Esperança</div>
+          <div class="sidebar-lista">
+            <div class="sidebar-item ativo" onclick="mostrarTela('tela-ong-dashboard')">Dashboard</div>
+            <div class="sidebar-item" onclick="mostrarTela('tela-ong-nova')">Campanhas</div>
+            <div class="sidebar-item" onclick="mostrarTela('tela-ong-dashboard')">Doações Recebidas</div>
+            <div class="sidebar-item" onclick="mostrarTela('tela-mensagens')">Mensagens</div>
+            <div class="sidebar-item">Relatórios</div>
+            <div class="sidebar-item">Minha Conta</div>
+          </div>
+        </div>
+        <div>
+          <div style="color:#F5EDE8; font-size:14px; font-weight:600; cursor:pointer;" onclick="alert('Central de Ajuda da Rede Abraço')">❓ Ajuda e Suporte</div>
+          <button class="botao-sair-sidebar" onclick="fazerLogout()">⎋ Sair da conta</button>
+        </div>
+      </aside>
+
+      <main class="conteudo-ong">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px;">
+          <div>
+            <h1 class="titulo-destaque" style="font-size:28px;">Dashboard</h1>
+            <p style="color:#6B5E58; font-size:14px;">Gerencie doações recebidas e evite excesso de itens</p>
+          </div>
+          <button class="botao botao-primario" onclick="mostrarTela('tela-ong-nova')">+ Nova Campanha</button>
+        </div>
+
+        <div class="grade-3" style="margin-bottom:28px;">
+          <div class="card">
+            <div class="titulo-destaque" style="font-size:34px;">45</div>
+            <div style="color:#6B5E58; font-weight:700; font-size:14px;">Doações este mês</div>
+          </div>
+          <div class="card">
+            <div id="kpi-pendentes" class="titulo-destaque" style="font-size:34px;">5</div>
+            <div style="color:#6B5E58; font-weight:700; font-size:14px;">Itens pendentes</div>
+          </div>
+          <div class="card">
+            <div id="kpi-campanhas" class="titulo-destaque" style="font-size:34px;">3</div>
+            <div style="color:#6B5E58; font-weight:700; font-size:14px;">Campanhas ativas</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:18px; margin-bottom:16px;">Controle de Itens das Campanhas</h3>
+          <div class="linha-tabela cabecalho">
+            <span>Item</span>
+            <span>Qtd.</span>
+            <span>Status</span>
+            <span>Ação</span>
+          </div>
+          <div id="tabela-itens-ong"></div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TELA 8: CRIAR NOVA CAMPANHA (ONG)
+       ============================================ -->
+  <section id="tela-ong-nova" class="tela">
+    <div class="layout-ong">
+      <aside class="sidebar-ong">
+        <div>
+          <div class="titulo-destaque" style="font-size:20px;">ABRAÇO ONG</div>
+          <div style="color:#F29985; font-size:13px; font-weight:700;">Abrigo Esperança</div>
+          <div class="sidebar-lista">
+            <div class="sidebar-item" onclick="mostrarTela('tela-ong-dashboard')">Dashboard</div>
+            <div class="sidebar-item ativo" onclick="mostrarTela('tela-ong-nova')">Campanhas</div>
+            <div class="sidebar-item" onclick="mostrarTela('tela-ong-dashboard')">Doações Recebidas</div>
+            <div class="sidebar-item" onclick="mostrarTela('tela-mensagens')">Mensagens</div>
+            <div class="sidebar-item">Relatórios</div>
+            <div class="sidebar-item">Minha Conta</div>
+          </div>
+        </div>
+        <div>
+          <div style="color:#F5EDE8; font-size:14px; font-weight:600; cursor:pointer;" onclick="alert('Central de Ajuda da Rede Abraço')">❓ Ajuda e Suporte</div>
+          <button class="botao-sair-sidebar" onclick="fazerLogout()">⎋ Sair da conta</button>
+        </div>
+      </aside>
+
+      <main class="conteudo-ong">
+        <a style="color:#8C5535; font-weight:700; font-size:14px;" onclick="mostrarTela('tela-ong-dashboard')">← Voltar para Campanhas</a>
+        <h1 class="titulo-destaque" style="font-size:28px; margin:10px 0 24px;">Criar Nova Campanha</h1>
+
+        <div class="card">
+          <div style="display:grid; grid-template-columns:1fr 280px; gap:18px;">
+            <div class="campo-form">
+              <label for="nova-titulo">Título da Campanha</label>
+              <input id="nova-titulo" class="input-texto" type="text" placeholder="Ex: Campanha do Agasalho 2026" />
+            </div>
+            <div class="campo-form">
+              <label for="nova-categoria">Categoria</label>
+              <select id="nova-categoria" class="input-texto">
+                <option value="Roupas">Roupas</option>
+                <option value="Alimentos">Alimentos</option>
+                <option value="Material Escolar">Material Escolar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="campo-form">
+            <label for="nova-descricao">Descrição</label>
+            <textarea id="nova-descricao" class="input-texto" rows="3" placeholder="Precisamos de casacos infantis e cobertores para o inverno..."></textarea>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 120px; gap:12px;" class="campo-form">
+            <div>
+              <label for="nova-item">Item Necessário</label>
+              <input id="nova-item" class="input-texto" type="text" placeholder="Casaco tamanho 7 anos masculino" />
+            </div>
+            <div>
+              <label for="nova-qtd">Qtd.</label>
+              <input id="nova-qtd" class="input-texto" type="number" min="1" value="5" />
+            </div>
+          </div>
+
+          <div style="display:flex; gap:12px; margin-top:20px;">
+            <button class="botao botao-primario botao-grande" onclick="publicarCampanha()">Publicar Campanha</button>
+            <button class="botao botao-claro botao-grande" onclick="mostrarTela('tela-ong-dashboard')">Salvar como Rascunho</button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TELA 9: MENSAGENS (CHAT)
+       ============================================ -->
+  <section id="tela-mensagens" class="tela">
+    <div class="layout-ong">
+      <aside class="sidebar-ong">
+        <div>
+          <div class="titulo-destaque" style="font-size:20px;">ABRAÇO ONG</div>
+          <div style="color:#F29985; font-size:13px; font-weight:700;">Abrigo Esperança</div>
+          <div class="sidebar-lista">
+            <div class="sidebar-item" onclick="mostrarTela('tela-ong-dashboard')">Dashboard</div>
+            <div class="sidebar-item" onclick="mostrarTela('tela-ong-nova')">Campanhas</div>
+            <div class="sidebar-item" onclick="mostrarTela('tela-ong-dashboard')">Doações Recebidas</div>
+            <div class="sidebar-item ativo" onclick="mostrarTela('tela-mensagens')">Mensagens</div>
+            <div class="sidebar-item">Relatórios</div>
+            <div class="sidebar-item">Minha Conta</div>
+          </div>
+        </div>
+        <div>
+          <div style="color:#F5EDE8; font-size:14px; font-weight:600; cursor:pointer;" onclick="alert('Central de Ajuda da Rede Abraço')">❓ Ajuda e Suporte</div>
+          <button class="botao-sair-sidebar" onclick="fazerLogout()">⎋ Sair da conta</button>
+        </div>
+      </aside>
+
+      <main class="conteudo-ong">
+        <div class="layout-chat">
+          <div class="card">
+            <h2 class="titulo-destaque" style="font-size:22px; margin-bottom:16px;">Conversas</h2>
+            <div id="lista-conversas"></div>
+          </div>
+
+          <div class="card painel-mensagens">
+            <div>
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+                <h2 id="chat-nome-ong" class="titulo-destaque" style="font-size:20px;">Abrigo Esperança</h2>
+                <span class="etiqueta etiqueta-verde">✓ Verificada</span>
+              </div>
+              <div id="chat-bolhas" style="display:flex; flex-direction:column;"></div>
+            </div>
+
+            <div style="display:flex; gap:10px; align-items:center;">
+              <input id="campo-mensagem" class="input-texto" style="border-radius:999px;" placeholder="Digite sua mensagem..." />
+              <button class="botao botao-claro" onclick="alert('Anexar arquivo')">📎</button>
+              <button class="botao botao-primario" onclick="enviarMensagem()">Enviar</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- ============================================
+       RODAPÉ DO SITE
+       ============================================ -->
+  <footer class="rodape">
+    <div class="rodape-topo">
+      <div>
+        <h3 class="titulo-destaque" style="font-size:22px; margin-bottom:8px;">ABRAÇO Solidário</h3>
+        <p style="color:#F5EDE8; max-width:440px; font-size:15px;">
+          Conectando doadores a instituições verificadas para evitar desperdícios e priorizar o que é urgente.
+        </p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="color:#F29985; font-size:13px; font-weight:800;">MENU</span>
+        <a onclick="mostrarTela('tela-home')">Início</a>
+        <a onclick="mostrarTela('tela-buscar')">Campanhas Urgentes</a>
+        <a onclick="mostrarTela('tela-buscar')">Instituições</a>
+        <a onclick="mostrarTela('tela-ong-dashboard')">Portal da ONG</a>
+      </div>
+    </div>
+    <div class="rodape-base">© 2026 ABRAÇO Rede Solidária • Todos os direitos reservados.</div>
+  </footer>
+
+  <!-- Arquivo de lógica JavaScript -->
   <script src="app.js"></script>
 </body>
 </html>
