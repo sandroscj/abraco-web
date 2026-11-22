@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABRAÇO • Detalhe da Campanha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <a class="logo-area" href="home.html">
+      <span class="logo-caixa">ABRAÇO</span>
+      <span class="logo-texto">Rede Solidária</span>
+    </a>
+    <nav class="menu-links" id="menu-principal" aria-label="Navegação principal"></nav>
+    <div class="menu-botoes" id="botoes-usuario"></div>
+  </header>
+
+  <main class="container">
+    <div style="background-color:#8C5535; color:#FFFFFF; border-radius:24px; padding:34px 38px; margin-bottom:18px;">
+      <span id="detalhe-categoria" class="etiqueta etiqueta-vermelha" style="margin-bottom:12px;"></span>
+      <h1 id="detalhe-titulo" class="titulo-destaque" style="font-size:32px; margin-bottom:6px;"></h1>
+      <div id="detalhe-subtitulo" style="color:#F5EDE8; font-weight:600;"></div>
+    </div>
+
+    <div class="barra-progresso" style="height:14px; margin-bottom:28px;">
+      <div id="detalhe-barra" class="barra-progresso-preenchida" style="width:70%;"></div>
+    </div>
+
+    <div class="grade-2">
+      <article class="card">
+        <h2 class="titulo-destaque" style="font-size:22px; margin-bottom:16px;">Itens necessários</h2>
+        <div id="detalhe-itens"></div>
+        <a class="botao botao-primario botao-grande" style="margin-top:10px;" href="doar.html">Registrar Intenção de Doação</a>
+      </article>
+
+      <aside class="card">
+        <h2 class="titulo-destaque" style="font-size:20px; margin-bottom:12px;">Sobre a Entidade</h2>
+        <span class="etiqueta etiqueta-verde" style="margin-bottom:12px;">✓ Verificada</span>
+        <div id="detalhe-ong-nome" style="font-weight:800; font-size:18px; margin-bottom:8px;"></div>
+        <div id="detalhe-ong-info" style="color:#6B5E58; font-size:14px;"></div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape-base">© 2026 ABRAÇO Rede Solidária • Projeto Interdisciplinar de Desenvolvimento Web</div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

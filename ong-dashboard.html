@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABRAÇO • Painel da Entidade</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <a class="logo-area" href="home.html">
+      <span class="logo-caixa">ABRAÇO</span>
+      <span class="logo-texto">Rede Solidária</span>
+    </a>
+    <nav class="menu-links" id="menu-principal" aria-label="Navegação principal"></nav>
+    <div class="menu-botoes" id="botoes-usuario"></div>
+  </header>
+
+  <main class="layout-painel">
+    <aside class="sidebar">
+      <div>
+        <div class="titulo-destaque" style="font-size:20px;">ABRAÇO ENTIDADE</div>
+        <div style="color:#F29985; font-size:13px; font-weight:700;">Abrigo Esperança</div>
+        <div class="sidebar-lista">
+          <a class="sidebar-item ativo" href="ong-dashboard.html">Necessidades (CRUD)</a>
+          <a class="sidebar-item" href="ong-nova.html">Nova Campanha</a>
+          <a class="sidebar-item" href="mensagens.html">Mensagens</a>
+        </div>
+      </div>
+      <button class="botao-sair-sidebar" onclick="fazerLogout()">⎋ Sair da conta</button>
+    </aside>
+
+    <section class="conteudo-painel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h1 class="titulo-destaque" style="font-size:28px;">Gerenciar Necessidades</h1>
+          <p style="color:#6B5E58; font-size:14px;">Cadastre, edite, exclua ou marque itens como recebidos</p>
+        </div>
+        <a class="botao botao-primario" href="ong-nova.html">+ Divulgar Campanha</a>
+      </div>
+
+      <div class="grade-3" style="margin-bottom:24px;">
+        <div class="card"><div class="titulo-destaque" style="font-size:32px;">45</div><div style="color:#6B5E58; font-weight:700; font-size:14px;">Doações este mês</div></div>
+        <div class="card"><div id="kpi-pendentes" class="titulo-destaque" style="font-size:32px;">0</div><div style="color:#6B5E58; font-weight:700; font-size:14px;">Itens pendentes</div></div>
+        <div class="card"><div id="kpi-campanhas" class="titulo-destaque" style="font-size:32px;">0</div><div style="color:#6B5E58; font-weight:700; font-size:14px;">Campanhas ativas</div></div>
+      </div>
+
+      <div class="card" style="margin-bottom:24px;">
+        <h2 id="titulo-form-crud" class="titulo-destaque" style="font-size:18px; margin-bottom:14px;">Cadastrar Nova Necessidade</h2>
+        <input type="hidden" id="crud-id-edicao" value="" />
+        <div style="display:grid; grid-template-columns:2fr 120px auto; gap:12px; align-items:end;">
+          <div>
+            <label for="crud-nome" style="display:block; font-size:13px; font-weight:700; margin-bottom:4px;">Nome do item</label>
+            <input id="crud-nome" class="input-texto" type="text" placeholder="Ex: Cobertor de casal" />
+          </div>
+          <div>
+            <label for="crud-qtd" style="display:block; font-size:13px; font-weight:700; margin-bottom:4px;">Quantidade</label>
+            <input id="crud-qtd" class="input-texto" type="number" min="1" value="1" />
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button id="btn-salvar-crud" class="botao botao-primario" onclick="salvarNecessidade()">Adicionar</button>
+            <button id="btn-cancelar-crud" class="botao botao-claro" style="display:none;" onclick="cancelarEdicao()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 style="font-size:18px; margin-bottom:14px;">Lista de Necessidades da Entidade</h2>
+        <div class="linha-tabela cabecalho">
+          <span>Item</span><span>Qtd.</span><span>Status</span><span>Ações (Editar / Excluir / Receber)</span>
+        </div>
+        <div id="tabela-itens-ong"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape-base">© 2026 ABRAÇO Rede Solidária • Projeto Interdisciplinar de Desenvolvimento Web</div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
