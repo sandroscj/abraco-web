@@ -1,4 +1,5 @@
 function el(id) { return document.getElementById(id); }
+function rota(arq) { var emPaginas = window.location.pathname.indexOf('/paginas/') !== -1; if (arq === 'index.html') return emPaginas ? '../index.html' : 'index.html'; return emPaginas ? arq : 'paginas/' + arq; }
 var dadosPadrao = {
   perfil: 'visitante', campanhaId: 1, conversaId: 1, busca: '',
   campanhas: [
@@ -16,24 +17,23 @@ var perfis = {
   entidade: { senha: 'ent!2026', pagina: 'ong-dashboard.html', tag: 'Entidade', cor: 'etiqueta-verde', links: [['Necessidades (CRUD)', 'ong-dashboard.html'], ['Nova Campanha', 'ong-nova.html'], ['Mensagens', 'mensagens.html']] },
   admin: { senha: 'adm@2026', pagina: 'admin-aprovacao.html', tag: 'Administrador', cor: 'etiqueta-rosa', links: [['Aprovações', 'admin-aprovacao.html'], ['Relatórios', 'admin-relatorios.html'], ['Campanhas', 'buscar.html']] }
 };
-var db = JSON.parse(localStorage.getItem('abraco_db')) || dadosPadrao;
-var categoriaAtual = 'Todas';
+var db = JSON.parse(localStorage.getItem('abraco_db')) || dadosPadrao, categoriaAtual = 'Todas';
 function salvarDb() { localStorage.setItem('abraco_db', JSON.stringify(db)); }
 function buscarCampanha(id) { for (var i = 0; i < db.campanhas.length; i++) if (db.campanhas[i].id === id) return db.campanhas[i]; return db.campanhas[0]; }
 function atualizarMenu() {
   var p = perfis[db.perfil], links = p ? p.links : [['Início', 'home.html'], ['Campanhas', 'buscar.html'], ['Entrar', 'index.html']], html = '';
-  for (var i = 0; i < links.length; i++) html += '<a class="menu-link" href="' + links[i][1] + '">' + links[i][0] + '</a>';
+  for (var i = 0; i < links.length; i++) html += '<a class="menu-link" href="' + rota(links[i][1]) + '">' + links[i][0] + '</a>';
   if (el('menu-principal')) el('menu-principal').innerHTML = html;
-  if (el('botoes-usuario')) el('botoes-usuario').innerHTML = p ? '<span class="etiqueta ' + p.cor + '">' + p.tag + '</span><button class="botao botao-sair" onclick="fazerLogout()">Sair</button>' : '<a class="botao botao-primario" href="index.html">Entrar / Login</a>';
+  if (el('botoes-usuario')) el('botoes-usuario').innerHTML = p ? '<span class="etiqueta ' + p.cor + '">' + p.tag + '</span><button class="botao botao-sair" onclick="fazerLogout()">Sair</button>' : '<a class="botao botao-primario" href="' + rota('index.html') + '">Entrar / Login</a>';
 }
 function validarLogin(e) {
   e.preventDefault(); var u = el('login-usuario').value.trim(), s = el('login-senha').value.trim();
-  if (perfis[u] && perfis[u].senha === s) { db.perfil = u; salvarDb(); window.location.href = perfis[u].pagina; }
+  if (perfis[u] && perfis[u].senha === s) { db.perfil = u; salvarDb(); window.location.href = rota(perfis[u].pagina); }
   else el('erro-login').style.display = 'block';
 }
-function fazerLogout() { db.perfil = 'visitante'; salvarDb(); window.location.href = 'index.html'; }
-function irParaBusca() { db.busca = el('campo-busca-home').value; salvarDb(); window.location.href = 'buscar.html'; }
-function abrirCampanha(id) { db.campanhaId = id; salvarDb(); window.location.href = 'campanha.html'; }
+function fazerLogout() { db.perfil = 'visitante'; salvarDb(); window.location.href = rota('index.html'); }
+function irParaBusca() { db.busca = el('campo-busca-home').value; salvarDb(); window.location.href = rota('buscar.html'); }
+function abrirCampanha(id) { db.campanhaId = id; salvarDb(); window.location.href = rota('campanha.html'); }
 function mudarCategoria(cat, btn) { categoriaAtual = cat; var bs = document.querySelectorAll('.filtros-rapidos .chip'); for (var i = 0; i < bs.length; i++) bs[i].classList.remove('ativo'); btn.classList.add('ativo'); desenharCampanhasHome(); }
 function desenharCampanhasHome() {
   var q = el('campo-busca-home').value.toLowerCase(), html = '';
@@ -56,7 +56,7 @@ function carregarFormularioDoacao() { var c = buscarCampanha(db.campanhaId), ops
 function enviarDoacao(e) {
   e.preventDefault(); var em = el('doar-email').value;
   if (em.indexOf('@') === -1 || em.indexOf('.') === -1) { el('doar-email').classList.add('erro'); el('erro-email').style.display = 'block'; return; }
-  db.doacoes.unshift({ item: el('doar-quantidade').value + 'x ' + el('doar-item').value, local: el('doar-ponto').value, data: el('doar-data').value, status: 'Agendada' }); salvarDb(); window.location.href = 'confirmado.html';
+  db.doacoes.unshift({ item: el('doar-quantidade').value + 'x ' + el('doar-item').value, local: el('doar-ponto').value, data: el('doar-data').value, status: 'Agendada' }); salvarDb(); window.location.href = rota('confirmado.html');
 }
 function carregarConfirmado() { var d = db.doacoes[0]; el('confirmado-resumo').textContent = 'Você registrou: ' + d.item; el('confirmado-ponto').textContent = 'Ponto de coleta: ' + d.local; el('confirmado-data').textContent = 'Data prevista: ' + d.data; }
 function desenharMinhasDoacoes() { var html = ''; for (var i = 0; i < db.doacoes.length; i++) html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:12px;background-color:#FAF7F5;margin-bottom:10px;flex-wrap:wrap;gap:10px;"><div><strong>' + db.doacoes[i].item + '</strong><div style="color:#6B5E58;font-size:13px;">' + db.doacoes[i].local + ' • Data: ' + db.doacoes[i].data + '</div></div><span class="etiqueta etiqueta-azul">' + db.doacoes[i].status + '</span></div>'; el('lista-minhas-doacoes').innerHTML = html; }
@@ -76,7 +76,7 @@ function iniciarEdicao(id) { for (var i = 0; i < db.campanhas[0].itens.length; i
 function cancelarEdicao() { el('crud-id-edicao').value = ''; el('crud-nome').value = ''; el('crud-qtd').value = 1; el('titulo-form-crud').textContent = 'Cadastrar Nova Necessidade'; el('btn-salvar-crud').textContent = 'Adicionar'; el('btn-cancelar-crud').style.display = 'none'; }
 function excluirNecessidade(id) { var nova = []; for (var i = 0; i < db.campanhas[0].itens.length; i++) if (db.campanhas[0].itens[i].id !== id) nova.push(db.campanhas[0].itens[i]); db.campanhas[0].itens = nova; salvarDb(); desenharDashboardOng(); }
 function marcarComoAtendido(id) { for (var i = 0; i < db.campanhas[0].itens.length; i++) if (db.campanhas[0].itens[i].id === id) db.campanhas[0].itens[i].atendido = true; salvarDb(); desenharDashboardOng(); }
-function publicarCampanha() { var tit = el('nova-titulo').value.trim() || 'Nova Campanha Solidária', item = el('nova-item').value.trim() || 'Item essencial'; db.campanhas.unshift({ id: Date.now(), titulo: tit, ong: 'Abrigo Esperança', endereco: 'Rua Exemplo, 100 - Centro', horario: 'Seg a Sex, 9h às 17h', categoria: el('nova-categoria').value, urgencia: 'Alta', progresso: 0, icone: '🎁', resumo: item, itens: [{ id: Date.now() + 1, nome: item, qtd: Number(el('nova-qtd').value) || 5, atendido: false }] }); salvarDb(); window.location.href = 'ong-dashboard.html'; }
+function publicarCampanha() { var tit = el('nova-titulo').value.trim() || 'Nova Campanha Solidária', item = el('nova-item').value.trim() || 'Item essencial'; db.campanhas.unshift({ id: Date.now(), titulo: tit, ong: 'Abrigo Esperança', endereco: 'Rua Exemplo, 100 - Centro', horario: 'Seg a Sex, 9h às 17h', categoria: el('nova-categoria').value, urgencia: 'Alta', progresso: 0, icone: '🎁', resumo: item, itens: [{ id: Date.now() + 1, nome: item, qtd: Number(el('nova-qtd').value) || 5, atendido: false }] }); salvarDb(); window.location.href = rota('ong-dashboard.html'); }
 function desenharChat() {
   var hLista = '', atual = db.conversas[0], hBolhas = '';
   for (var i = 0; i < db.conversas.length; i++) { var cv = db.conversas[i]; if (cv.id === db.conversaId) atual = cv; hLista += '<div class="item-conversa ' + (cv.id === db.conversaId ? 'ativa' : '') + '" onclick="abrirConversa(' + cv.id + ')"><div style="font-weight:800;font-size:15px;">👤 ' + cv.ong + '</div><div style="color:#6B5E58;font-size:13px;">' + cv.mensagens[cv.mensagens.length - 1].texto + '</div></div>'; }

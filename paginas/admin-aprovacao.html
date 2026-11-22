@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ABRAÇO • Relatórios Admin</title>
+  <title>ABRAÇO • Aprovação Admin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="../styles.css" />
 </head>
 <body>
   <header class="navbar">
@@ -25,8 +25,8 @@
         <div class="titulo-destaque" style="font-size:20px;">ADMIN ABRAÇO</div>
         <div style="color:#F29985; font-size:13px; font-weight:700;">Gestão da Plataforma</div>
         <div class="sidebar-lista">
-          <a class="sidebar-item" href="admin-aprovacao.html">Aprovar Entidades</a>
-          <a class="sidebar-item ativo" href="admin-relatorios.html">Relatórios e Moderação</a>
+          <a class="sidebar-item ativo" href="admin-aprovacao.html">Aprovar Entidades</a>
+          <a class="sidebar-item" href="admin-relatorios.html">Relatórios e Moderação</a>
           <a class="sidebar-item" href="buscar.html">Ver Campanhas Ativas</a>
         </div>
       </div>
@@ -34,18 +34,14 @@
     </aside>
 
     <section class="conteudo-painel">
-      <h1 class="titulo-destaque" style="font-size:28px; margin-bottom:20px;">Relatórios Gerais</h1>
-      <div class="grade-3">
-        <article class="card"><div class="titulo-destaque" style="font-size:32px; color:#8C5535;">18</div><strong>Entidades Aprovadas</strong></article>
-        <article class="card"><div class="titulo-destaque" style="font-size:32px; color:#41BDD9;">524</div><strong>Doações Registradas</strong></article>
-        <article class="card"><div class="titulo-destaque" style="font-size:32px; color:#22C55E;">0</div><strong>Denúncias Pendentes</strong></article>
-      </div>
+      <h1 class="titulo-destaque" style="font-size:28px; margin-bottom:20px;">Aprovação de Entidades e Campanhas</h1>
+      <div id="lista-aprovacao-admin" class="card"></div>
     </section>
   </main>
 
   <footer class="rodape">
     <div class="rodape-base">© 2026 ABRAÇO Rede Solidária • Projeto Interdisciplinar de Desenvolvimento Web</div>
   </footer>
-  <script src="app.js"></script>
+  <script src="../app.js"></script>
 </body>
 </html>
