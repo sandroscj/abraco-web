@@ -60,7 +60,7 @@
             <article class="card" style="background-color:#FAF7F5; box-shadow:none;">
               <span class="etiqueta etiqueta-azul" style="margin-bottom:12px;">Passo 1</span>
               <h3 style="font-size:18px; margin-bottom:6px;">Encontre uma campanha</h3>
-              <p style="color:#6B5E58; font-size:14px;">Pesquise por bairro, categoria ou campanhas emergenciais da Defesa Civil.</p>
+              <p style="color:#6B5E58; font-size:14px;">Pesquise por bairro, categoria ou campanhas emergenciais ativas.</p>
             </article>
             <article class="card" style="background-color:#FAF7F5; box-shadow:none;">
               <span class="etiqueta etiqueta-rosa" style="margin-bottom:12px;">Passo 2</span>
@@ -79,7 +79,7 @@
       <div class="secao-sobre">
         <article class="sobre-esquerda">
           <h2 class="titulo-destaque" style="font-size:30px;">Sobre a Rede Abraço</h2>
-          <p>A Rede Abraço é uma plataforma web de doações e solidariedade criada para aproximar cidadãos, entidades beneficentes, Defesa Civil e administradores municipais. Com foco em transparência e acessibilidade, evita excesso de itens e agiliza o atendimento em desastres ambientais.</p>
+          <p>A Rede Abraço é uma plataforma web de doações e solidariedade criada para aproximar cidadãos, entidades beneficentes e administradores da rede. Com foco em transparência e acessibilidade, evita excesso de itens e agiliza o atendimento em campanhas urgentes.</p>
           <button class="botao botao-coral" onclick="mostrarTela('tela-login')">Acessar minha conta →</button>
         </article>
         <div class="sobre-direita">
@@ -111,7 +111,7 @@
           </article>
           <article class="card">
             <h3 style="color:#8C5535; font-size:16px; margin-bottom:8px;">Emergências Ambientais</h3>
-            <p style="color:#6B5E58; font-size:14px;">A Defesa Civil abre campanhas rápidas para enchentes, deslizamentos, secas e incêndios.</p>
+            <p style="color:#6B5E58; font-size:14px;">Campanhas rápidas para enchentes, deslizamentos, secas e incêndios com itens prioritários.</p>
           </article>
           <article class="card">
             <h3 style="color:#8C5535; font-size:16px; margin-bottom:8px;">Controle sem desperdício</h3>
@@ -129,7 +129,7 @@
         <form onsubmit="validarLogin(event)">
           <div class="campo-form">
             <label for="login-usuario">Usuário</label>
-            <input id="login-usuario" class="input-texto" type="text" placeholder="Ex: doador, entidade, defesacivil ou admin" required />
+            <input id="login-usuario" class="input-texto" type="text" placeholder="Ex: doador, entidade ou admin" required />
           </div>
 
           <div class="campo-form">
@@ -145,7 +145,6 @@
           <strong style="color:#241C18; display:block; margin-bottom:6px;">Perfis de teste disponíveis:</strong>
           <div>• Doador: <strong>doador</strong> / <strong>doa#2026</strong></div>
           <div>• Entidade: <strong>entidade</strong> / <strong>ent!2026</strong></div>
-          <div>• Defesa Civil: <strong>defesacivil</strong> / <strong>dc$-2026</strong></div>
           <div>• Administrador: <strong>admin</strong> / <strong>adm@2026</strong></div>
         </div>
       </div>
@@ -190,7 +189,7 @@
           <div id="resultado-busca-mapa" class="mapa-simulado" style="display:none;">
             <button class="pino-mapa" style="top:20%; left:18%;" onclick="abrirCampanha(1)">📍 Abrigo Esperança (Centro)</button>
             <button class="pino-mapa" style="top:48%; left:50%;" onclick="abrirCampanha(2)">📍 Casa da Criança (Jardim Camburi)</button>
-            <button class="pino-mapa" style="top:72%; left:26%;" onclick="abrirCampanha(4)">🚨 Defesa Civil (Enchente - Vale Verde)</button>
+            <button class="pino-mapa" style="top:72%; left:26%;" onclick="abrirCampanha(3)">📍 Lar Semente Você (Laranjeiras)</button>
             <span style="color:#6B5E58; font-weight:700;">Mapa de pontos de coleta — clique em um marcador</span>
           </div>
         </div>
@@ -472,111 +471,6 @@
       </div>
     </section>
 
-    <section id="tela-dc-painel" class="tela">
-      <div class="layout-painel">
-        <aside class="sidebar">
-          <div>
-            <div class="titulo-destaque" style="font-size:20px;">DEFESA CIVIL</div>
-            <div style="color:#F29985; font-size:13px; font-weight:700;">Monitoramento Regional</div>
-            <div class="sidebar-lista">
-              <div class="sidebar-item ativo" onclick="mostrarTela('tela-dc-painel')">Situação por Região</div>
-              <div class="sidebar-item" onclick="mostrarTela('tela-dc-emergencia')">Abrir Emergência</div>
-              <div class="sidebar-item" onclick="mostrarTela('tela-dc-pontos')">Pontos de Apoio</div>
-            </div>
-          </div>
-          <button class="botao-sair-sidebar" onclick="fazerLogout()">⎋ Sair da conta</button>
-        </aside>
-
-        <div class="conteudo-painel">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
-            <div>
-              <h1 class="titulo-destaque" style="font-size:28px;">Painel de Situação por Região</h1>
-              <p style="color:#6B5E58; font-size:14px;">Acompanhamento de áreas atingidas por desastres ambientais</p>
-            </div>
-            <button class="botao botao-excluir" onclick="mostrarTela('tela-dc-emergencia')">🚨 Nova Campanha Emergencial</button>
-          </div>
-
-          <div id="lista-regioes-dc" class="grade-3"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tela-dc-emergencia" class="tela">
-      <div class="layout-painel">
-        <aside class="sidebar">
-          <div>
-            <div class="titulo-destaque" style="font-size:20px;">DEFESA CIVIL</div>
-            <div style="color:#F29985; font-size:13px; font-weight:700;">Monitoramento Regional</div>
-            <div class="sidebar-lista">
-              <div class="sidebar-item" onclick="mostrarTela('tela-dc-painel')">Situação por Região</div>
-              <div class="sidebar-item ativo" onclick="mostrarTela('tela-dc-emergencia')">Abrir Emergência</div>
-              <div class="sidebar-item" onclick="mostrarTela('tela-dc-pontos')">Pontos de Apoio</div>
-            </div>
-          </div>
-          <button class="botao-sair-sidebar" onclick="fazerLogout()">⎋ Sair da conta</button>
-        </aside>
-
-        <div class="conteudo-painel">
-          <h1 class="titulo-destaque" style="font-size:28px; margin-bottom:20px;">Abrir Campanha Emergencial</h1>
-          <div class="card">
-            <div class="grade-2">
-              <div class="campo-form">
-                <label for="dc-tipo">Tipo de Desastre</label>
-                <select id="dc-tipo" class="input-texto">
-                  <option value="Enchente">Enchente</option>
-                  <option value="Deslizamento">Deslizamento</option>
-                  <option value="Seca">Seca</option>
-                  <option value="Incêndio">Incêndio</option>
-                </select>
-              </div>
-              <div class="campo-form">
-                <label for="dc-regiao">Região Atingida</label>
-                <input id="dc-regiao" class="input-texto" type="text" placeholder="Ex: Bairro Vale Verde" />
-              </div>
-            </div>
-            <div class="campo-form">
-              <label for="dc-itens">Itens Prioritários</label>
-              <input id="dc-itens" class="input-texto" type="text" placeholder="Ex: Água potável, colchões, produtos de higiene" />
-            </div>
-            <button class="botao botao-excluir botao-grande" onclick="criarEmergenciaDc()">Publicar Alerta e Campanha</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tela-dc-pontos" class="tela">
-      <div class="layout-painel">
-        <aside class="sidebar">
-          <div>
-            <div class="titulo-destaque" style="font-size:20px;">DEFESA CIVIL</div>
-            <div style="color:#F29985; font-size:13px; font-weight:700;">Monitoramento Regional</div>
-            <div class="sidebar-lista">
-              <div class="sidebar-item" onclick="mostrarTela('tela-dc-painel')">Situação por Região</div>
-              <div class="sidebar-item" onclick="mostrarTela('tela-dc-emergencia')">Abrir Emergência</div>
-              <div class="sidebar-item ativo" onclick="mostrarTela('tela-dc-pontos')">Pontos de Apoio</div>
-            </div>
-          </div>
-          <button class="botao-sair-sidebar" onclick="fazerLogout()">⎋ Sair da conta</button>
-        </aside>
-
-        <div class="conteudo-painel">
-          <h1 class="titulo-destaque" style="font-size:28px; margin-bottom:20px;">Pontos de Apoio Oficiais</h1>
-          <div class="grade-2">
-            <article class="card">
-              <span class="etiqueta etiqueta-verde" style="margin-bottom:10px;">Aberto 24h</span>
-              <h2 style="font-size:18px; margin-bottom:6px;">Ginásio Municipal Central</h2>
-              <p style="color:#6B5E58; font-size:14px;">Recebimento de água, alimentos e roupas • Capacidade: 85% livre</p>
-            </article>
-            <article class="card">
-              <span class="etiqueta etiqueta-amarela" style="margin-bottom:10px;">Alta Demanda</span>
-              <h2 style="font-size:18px; margin-bottom:6px;">Escola Estadual Vale Verde</h2>
-              <p style="color:#6B5E58; font-size:14px;">Acolhimento de famílias atingidas por chuva • Precisa de cobertores</p>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section id="tela-admin-aprovacao" class="tela">
       <div class="layout-painel">
         <aside class="sidebar">
@@ -641,7 +535,7 @@
       <div>
         <h2 class="titulo-destaque" style="font-size:22px; margin-bottom:8px;">ABRAÇO Solidário</h2>
         <p style="color:#F5EDE8; max-width:440px; font-size:15px;">
-          Plataforma web de doações e solidariedade conectando cidadãos, entidades verificadas e Defesa Civil.
+          Plataforma web de doações e solidariedade conectando cidadãos e entidades verificadas.
         </p>
       </div>
       <div style="display:flex; flex-direction:column; gap:8px;">

@@ -50,8 +50,8 @@ var campanhas = [
   },
   {
     id: 4,
-    titulo: 'Emergência Enchente - Vale Verde',
-    ong: 'Defesa Civil Municipal',
+    titulo: 'Apoio Emergencial - Vale Verde',
+    ong: 'Instituto Mãos Unidas',
     endereco: 'Ginásio Municipal Central',
     horario: 'Todos os dias, 24h',
     categoria: 'Emergência',
@@ -86,12 +86,6 @@ var conversas = [
       { tipo: 'recebida', texto: 'Obrigada pela doação!', hora: 'Ontem' }
     ]
   }
-];
-
-var regioesDc = [
-  { nome: 'Vale Verde', ocorrencia: 'Enchente', nivel: 'Crítico', familias: 42 },
-  { nome: 'Morro Alto', ocorrencia: 'Deslizamento', nivel: 'Alerta', familias: 18 },
-  { nome: 'Zona Rural Norte', ocorrencia: 'Seca', nivel: 'Atenção', familias: 25 }
 ];
 
 var pendenciasAdmin = [
@@ -130,14 +124,6 @@ function atualizarMenu() {
     botoes.innerHTML =
       '<span class="etiqueta etiqueta-verde">Entidade</span>' +
       '<button class="botao botao-sair" onclick="fazerLogout()">Sair</button>';
-  } else if (perfilAtual === 'defesacivil') {
-    menu.innerHTML =
-      '<a class="menu-link" onclick="mostrarTela(\'tela-dc-painel\')">Situação Regional</a>' +
-      '<a class="menu-link" onclick="mostrarTela(\'tela-dc-emergencia\')">Abrir Emergência</a>' +
-      '<a class="menu-link" onclick="mostrarTela(\'tela-dc-pontos\')">Pontos de Apoio</a>';
-    botoes.innerHTML =
-      '<span class="etiqueta etiqueta-vermelha">Defesa Civil</span>' +
-      '<button class="botao botao-sair" onclick="fazerLogout()">Sair</button>';
   } else if (perfilAtual === 'admin') {
     menu.innerHTML =
       '<a class="menu-link" onclick="mostrarTela(\'tela-admin-aprovacao\')">Aprovações</a>' +
@@ -167,7 +153,6 @@ function mostrarTela(idTela) {
   if (idTela === 'tela-minhas-doacoes') desenharMinhasDoacoes();
   if (idTela === 'tela-ong-dashboard') desenharDashboardOng();
   if (idTela === 'tela-mensagens') desenharChat();
-  if (idTela === 'tela-dc-painel') desenharPainelDc();
   if (idTela === 'tela-admin-aprovacao') desenharAprovacaoAdmin();
 }
 
@@ -187,11 +172,6 @@ function validarLogin(evento) {
     erroBox.style.display = 'none';
     atualizarMenu();
     mostrarTela('tela-ong-dashboard');
-  } else if (usuario === 'defesacivil' && senha === 'dc$-2026') {
-    perfilAtual = 'defesacivil';
-    erroBox.style.display = 'none';
-    atualizarMenu();
-    mostrarTela('tela-dc-painel');
   } else if (usuario === 'admin' && senha === 'adm@2026') {
     perfilAtual = 'admin';
     erroBox.style.display = 'none';
@@ -591,47 +571,6 @@ function enviarMensagem() {
   }
   campo.value = '';
   desenharChat();
-}
-
-function desenharPainelDc() {
-  var caixa = document.getElementById('lista-regioes-dc');
-  var html = '';
-  for (var i = 0; i < regioesDc.length; i++) {
-    var r = regioesDc[i];
-    var cor = r.nivel === 'Crítico' ? 'etiqueta-vermelha' : 'etiqueta-amarela';
-    html += '<article class="card">';
-    html += '  <span class="etiqueta ' + cor + '" style="margin-bottom:10px;">Nível: ' + r.nivel + '</span>';
-    html += '  <h2 class="titulo-destaque" style="font-size:20px; margin-bottom:6px;">' + r.nome + '</h2>';
-    html += '  <p style="color:#6B5E58; font-size:14px;">Ocorrência: <strong>' + r.ocorrencia + '</strong></p>';
-    html += '  <p style="color:#6B5E58; font-size:14px;">Famílias atendidas: <strong>' + r.familias + '</strong></p>';
-    html += '</article>';
-  }
-  caixa.innerHTML = html;
-}
-
-function criarEmergenciaDc() {
-  var tipo = document.getElementById('dc-tipo').value;
-  var regiao = document.getElementById('dc-regiao').value.trim();
-  var itens = document.getElementById('dc-itens').value.trim();
-  if (regiao === '') regiao = 'Região Central';
-  if (itens === '') itens = 'Água potável e alimentos';
-
-  regioesDc.unshift({ nome: regiao, ocorrencia: tipo, nivel: 'Crítico', familias: 15 });
-  campanhas.unshift({
-    id: Date.now(),
-    titulo: 'Emergência ' + tipo + ' - ' + regiao,
-    ong: 'Defesa Civil Municipal',
-    endereco: 'Ponto de Apoio - ' + regiao,
-    horario: 'Todos os dias, 24h',
-    categoria: 'Emergência',
-    urgencia: 'Alta',
-    progresso: 10,
-    icone: '🚨',
-    resumo: itens,
-    itens: [{ id: Date.now() + 1, nome: itens, qtd: 20, atendido: false }]
-  });
-
-  mostrarTela('tela-dc-painel');
 }
 
 function desenharAprovacaoAdmin() {
