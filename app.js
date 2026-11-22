@@ -1,9 +1,3 @@
-/* ============================================
-   ABRAÇO - Rede Solidária
-   Lógica simples em JavaScript puro
-   ============================================ */
-
-// Lista de campanhas (dados de exemplo do projeto)
 var campanhas = [
   {
     id: 1,
@@ -53,10 +47,29 @@ var campanhas = [
       { id: 301, nome: 'Cesta básica completa', qtd: 8, atendido: false },
       { id: 302, nome: 'Leite em pó integral', qtd: 12, atendido: false }
     ]
+  },
+  {
+    id: 4,
+    titulo: 'Emergência Enchente - Vale Verde',
+    ong: 'Defesa Civil Municipal',
+    endereco: 'Ginásio Municipal Central',
+    horario: 'Todos os dias, 24h',
+    categoria: 'Emergência',
+    urgencia: 'Alta',
+    progresso: 40,
+    icone: '🚨',
+    resumo: 'Água potável, Colchões, Produtos de higiene',
+    itens: [
+      { id: 401, nome: 'Fardo de água potável', qtd: 20, atendido: false },
+      { id: 402, nome: 'Kit de higiene pessoal', qtd: 15, atendido: false }
+    ]
   }
 ];
 
-// Lista de conversas do chat
+var minhasDoacoes = [
+  { item: '2x Casaco tamanho 7 anos masculino', local: 'Abrigo Esperança', data: '2026-11-28', status: 'Agendada' }
+];
+
 var conversas = [
   {
     id: 1,
@@ -72,61 +85,136 @@ var conversas = [
     mensagens: [
       { tipo: 'recebida', texto: 'Obrigada pela doação!', hora: 'Ontem' }
     ]
-  },
-  {
-    id: 3,
-    ong: 'Lar Semente Você',
-    mensagens: [
-      { tipo: 'enviada', texto: 'Vocês têm tamanho 4?', hora: 'Seg' }
-    ]
   }
 ];
 
-// Variáveis que guardam o que está selecionado no momento
+var regioesDc = [
+  { nome: 'Vale Verde', ocorrencia: 'Enchente', nivel: 'Crítico', familias: 42 },
+  { nome: 'Morro Alto', ocorrencia: 'Deslizamento', nivel: 'Alerta', familias: 18 },
+  { nome: 'Zona Rural Norte', ocorrencia: 'Seca', nivel: 'Atenção', familias: 25 }
+];
+
+var pendenciasAdmin = [
+  { id: 1, nome: 'Instituto Mãos Unidas', tipo: 'Entidade', cnpj: '14.222.333/0001-55', status: 'Pendente' },
+  { id: 2, nome: 'Campanha Natal Sem Fome', tipo: 'Campanha', cnpj: '12.345.678/0001-90', status: 'Pendente' }
+];
+
+var perfilAtual = 'visitante';
 var categoriaAtual = 'Todas';
 var campanhaSelecionadaId = 1;
 var conversaAtualId = 1;
-var perfilLogin = 'doador';
 
-// ============================================
-// 1. NAVEGAÇÃO ENTRE TELAS
-// ============================================
+function atualizarMenu() {
+  var menu = document.getElementById('menu-principal');
+  var botoes = document.getElementById('botoes-usuario');
+
+  if (perfilAtual === 'visitante') {
+    menu.innerHTML =
+      '<a class="menu-link" onclick="mostrarTela(\'tela-home\')">Início</a>' +
+      '<a class="menu-link" onclick="mostrarTela(\'tela-buscar\')">Campanhas</a>' +
+      '<a class="menu-link" onclick="mostrarTela(\'tela-login\')">Entrar</a>';
+    botoes.innerHTML = '<button class="botao botao-primario" onclick="mostrarTela(\'tela-login\')">Entrar / Login</button>';
+  } else if (perfilAtual === 'doador') {
+    menu.innerHTML =
+      '<a class="menu-link" onclick="mostrarTela(\'tela-home\')">Início</a>' +
+      '<a class="menu-link" onclick="mostrarTela(\'tela-buscar\')">Buscar Campanhas</a>' +
+      '<a class="menu-link" onclick="mostrarTela(\'tela-minhas-doacoes\')">Minhas Doações</a>';
+    botoes.innerHTML =
+      '<span class="etiqueta etiqueta-azul">Doador</span>' +
+      '<button class="botao botao-sair" onclick="fazerLogout()">Sair</button>';
+  } else if (perfilAtual === 'entidade') {
+    menu.innerHTML =
+      '<a class="menu-link" onclick="mostrarTela(\'tela-ong-dashboard\')">Necessidades (CRUD)</a>' +
+      '<a class="menu-link" onclick="mostrarTela(\'tela-ong-nova\')">Nova Campanha</a>' +
+      '<a class="menu-link" onclick="mostrarTela(\'tela-mensagens\')">Mensagens</a>';
+    botoes.innerHTML =
+      '<span class="etiqueta etiqueta-verde">Entidade</span>' +
+      '<button class="botao botao-sair" onclick="fazerLogout()">Sair</button>';
+  } else if (perfilAtual === 'defesacivil') {
+    menu.innerHTML =
+      '<a class="menu-link" onclick="mostrarTela(\'tela-dc-painel\')">Situação Regional</a>' +
+      '<a class="menu-link" onclick="mostrarTela(\'tela-dc-emergencia\')">Abrir Emergência</a>' +
+      '<a class="menu-link" onclick="mostrarTela(\'tela-dc-pontos\')">Pontos de Apoio</a>';
+    botoes.innerHTML =
+      '<span class="etiqueta etiqueta-vermelha">Defesa Civil</span>' +
+      '<button class="botao botao-sair" onclick="fazerLogout()">Sair</button>';
+  } else if (perfilAtual === 'admin') {
+    menu.innerHTML =
+      '<a class="menu-link" onclick="mostrarTela(\'tela-admin-aprovacao\')">Aprovações</a>' +
+      '<a class="menu-link" onclick="mostrarTela(\'tela-admin-relatorios\')">Relatórios</a>' +
+      '<a class="menu-link" onclick="mostrarTela(\'tela-buscar\')">Campanhas</a>';
+    botoes.innerHTML =
+      '<span class="etiqueta etiqueta-rosa">Administrador</span>' +
+      '<button class="botao botao-sair" onclick="fazerLogout()">Sair</button>';
+  }
+}
+
 function mostrarTela(idTela) {
-  // Pega todas as sections com classe "tela" e esconde uma por uma
   var telas = document.querySelectorAll('.tela');
   for (var i = 0; i < telas.length; i++) {
     telas[i].classList.remove('ativa');
   }
 
-  // Mostra apenas a tela desejada
-  var telaEscolhida = document.getElementById(idTela);
-  if (telaEscolhida) {
-    telaEscolhida.classList.add('ativa');
+  var tela = document.getElementById(idTela);
+  if (tela) {
+    tela.classList.add('ativa');
   }
 
-  // Volta a rolagem da página para o topo
   window.scrollTo(0, 0);
 
-  // Atualiza os dados da tela aberta
   if (idTela === 'tela-home') desenharCampanhasHome();
   if (idTela === 'tela-buscar') desenharBusca();
+  if (idTela === 'tela-minhas-doacoes') desenharMinhasDoacoes();
   if (idTela === 'tela-ong-dashboard') desenharDashboardOng();
   if (idTela === 'tela-mensagens') desenharChat();
+  if (idTela === 'tela-dc-painel') desenharPainelDc();
+  if (idTela === 'tela-admin-aprovacao') desenharAprovacaoAdmin();
 }
 
-// ============================================
-// 2. HOME E FILTRO DE CAMPANHAS
-// ============================================
+function validarLogin(evento) {
+  evento.preventDefault();
+  var usuario = document.getElementById('login-usuario').value.trim();
+  var senha = document.getElementById('login-senha').value.trim();
+  var erroBox = document.getElementById('erro-login');
+
+  if (usuario === 'doador' && senha === 'doa#2026') {
+    perfilAtual = 'doador';
+    erroBox.style.display = 'none';
+    atualizarMenu();
+    mostrarTela('tela-buscar');
+  } else if (usuario === 'entidade' && senha === 'ent!2026') {
+    perfilAtual = 'entidade';
+    erroBox.style.display = 'none';
+    atualizarMenu();
+    mostrarTela('tela-ong-dashboard');
+  } else if (usuario === 'defesacivil' && senha === 'dc$-2026') {
+    perfilAtual = 'defesacivil';
+    erroBox.style.display = 'none';
+    atualizarMenu();
+    mostrarTela('tela-dc-painel');
+  } else if (usuario === 'admin' && senha === 'adm@2026') {
+    perfilAtual = 'admin';
+    erroBox.style.display = 'none';
+    atualizarMenu();
+    mostrarTela('tela-admin-aprovacao');
+  } else {
+    erroBox.style.display = 'block';
+  }
+}
+
+function fazerLogout() {
+  perfilAtual = 'visitante';
+  atualizarMenu();
+  mostrarTela('tela-login');
+}
+
 function mudarCategoria(novaCategoria, botaoClicado) {
   categoriaAtual = novaCategoria;
-
-  // Tira o destaque dos outros botões e marca o clicado
   var botoes = document.querySelectorAll('.filtros-rapidos .chip');
   for (var i = 0; i < botoes.length; i++) {
     botoes[i].classList.remove('ativo');
   }
   botaoClicado.classList.add('ativo');
-
   desenharCampanhasHome();
 }
 
@@ -137,39 +225,27 @@ function desenharCampanhasHome() {
 
   for (var i = 0; i < campanhas.length; i++) {
     var c = campanhas[i];
-
-    // Verifica filtro de categoria
-    var passaCategoria = false;
-    if (categoriaAtual === 'Todas') {
-      passaCategoria = true;
-    } else if (categoriaAtual === 'Urgente' && c.urgencia === 'Alta') {
-      passaCategoria = true;
-    } else if (c.categoria === categoriaAtual) {
-      passaCategoria = true;
-    }
-
-    // Verifica texto digitado na busca
+    var passaCategoria = categoriaAtual === 'Todas' || c.categoria === categoriaAtual;
     var passaBusca =
       c.titulo.toLowerCase().indexOf(textoBusca) !== -1 ||
       c.ong.toLowerCase().indexOf(textoBusca) !== -1 ||
       c.resumo.toLowerCase().indexOf(textoBusca) !== -1;
 
     if (passaCategoria && passaBusca) {
-      var corTag = c.urgencia === 'Alta' ? 'etiqueta-rosa' : 'etiqueta-coral';
-
-      html += '<div class="card">';
+      var corTag = c.categoria === 'Emergência' ? 'etiqueta-vermelha' : 'etiqueta-rosa';
+      html += '<article class="card">';
       html += '  <div class="capa-campanha">';
       html += '    <span class="etiqueta ' + corTag + '">' + c.categoria + '</span>';
-      html += '    <span style="font-size:38px;">' + c.icone + '</span>';
+      html += '    <span style="font-size:36px;">' + c.icone + '</span>';
       html += '  </div>';
-      html += '  <h3 class="titulo-destaque" style="font-size:19px; margin-bottom:6px;">' + c.titulo + '</h3>';
+      html += '  <h3 class="titulo-destaque" style="font-size:18px; margin-bottom:6px;">' + c.titulo + '</h3>';
       html += '  <div style="color:#41BDD9; font-weight:700; font-size:14px;">' + c.ong + ' • ✓ Verificada</div>';
       html += '  <div class="barra-progresso"><div class="barra-progresso-preenchida" style="width:' + c.progresso + '%;"></div></div>';
       html += '  <div style="display:flex; justify-content:space-between; align-items:center;">';
       html += '    <strong style="font-size:14px;">' + c.progresso + '% arrecadado</strong>';
       html += '    <button class="botao botao-primario botao-pequeno" onclick="abrirCampanha(' + c.id + ')">Doar agora</button>';
       html += '  </div>';
-      html += '</div>';
+      html += '</article>';
     }
   }
 
@@ -177,42 +253,45 @@ function desenharCampanhasHome() {
 }
 
 function irParaBusca() {
-  var texto = document.getElementById('campo-busca-home').value;
-  document.getElementById('campo-busca-lista').value = texto;
+  document.getElementById('campo-busca-lista').value = document.getElementById('campo-busca-home').value;
   mostrarTela('tela-buscar');
 }
 
-// ============================================
-// 3. TELA DE BUSCA (LISTA E MAPA)
-// ============================================
 function desenharBusca() {
   var caixa = document.getElementById('resultado-busca-lista');
   var texto = document.getElementById('campo-busca-lista').value.toLowerCase();
+  var catSel = document.querySelector('input[name="filtro-cat"]:checked').value;
+  var urgSel = document.querySelector('input[name="filtro-urg"]:checked').value;
   var html = '';
 
   for (var i = 0; i < campanhas.length; i++) {
     var c = campanhas[i];
-    var combina =
+    var combinaTexto =
       c.ong.toLowerCase().indexOf(texto) !== -1 ||
       c.titulo.toLowerCase().indexOf(texto) !== -1 ||
       c.resumo.toLowerCase().indexOf(texto) !== -1;
+    var combinaCat = catSel === 'Todas' || c.categoria === catSel;
+    var combinaUrg = urgSel === 'Todas' || c.urgencia === urgSel;
 
-    if (combina) {
-      html += '<div class="card card-instituicao">';
+    if (combinaTexto && combinaCat && combinaUrg) {
+      html += '<article class="card card-instituicao">';
       html += '  <div>';
       html += '    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:4px;">';
-      html += '      <strong class="titulo-destaque" style="font-size:18px;">' + c.ong + '</strong>';
+      html += '      <strong class="titulo-destaque" style="font-size:18px;">' + c.titulo + '</strong>';
       html += '      <span class="etiqueta etiqueta-verde">✓ Verificada</span>';
       html += '      <span class="etiqueta etiqueta-vermelha">Urgência ' + c.urgencia + '</span>';
       html += '    </div>';
-      html += '    <div style="color:#6B5E58; font-size:14px;">' + c.endereco + '</div>';
+      html += '    <div style="color:#6B5E58; font-size:14px;">' + c.ong + ' • ' + c.endereco + '</div>';
       html += '    <div style="font-weight:700; font-size:14px; margin-top:4px;">Precisa de: ' + c.resumo + '</div>';
       html += '  </div>';
       html += '  <button class="botao botao-primario" onclick="abrirCampanha(' + c.id + ')">Ver Necessidades</button>';
-      html += '</div>';
+      html += '</article>';
     }
   }
 
+  if (html === '') {
+    html = '<div class="card"><p style="color:#6B5E58;">Nenhuma campanha encontrada com esses filtros.</p></div>';
+  }
   caixa.innerHTML = html;
 }
 
@@ -235,14 +314,9 @@ function mudarModoBusca(modo) {
   }
 }
 
-// ============================================
-// 4. DETALHE DA CAMPANHA E DOAÇÃO
-// ============================================
 function buscarCampanhaPorId(id) {
   for (var i = 0; i < campanhas.length; i++) {
-    if (campanhas[i].id === id) {
-      return campanhas[i];
-    }
+    if (campanhas[i].id === id) return campanhas[i];
   }
   return campanhas[0];
 }
@@ -258,17 +332,16 @@ function abrirCampanha(id) {
   document.getElementById('detalhe-ong-nome').textContent = c.ong;
   document.getElementById('detalhe-ong-info').innerHTML = '📍 ' + c.endereco + '<br />🕒 ' + c.horario;
 
-  // Monta a lista de itens necessários
   var htmlItens = '';
   for (var i = 0; i < c.itens.length; i++) {
     var item = c.itens[i];
     if (item.atendido) {
-      htmlItens += '<div style="display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-radius:12px; margin-bottom:10px; background-color:#E8F9FC;">';
-      htmlItens += '  <span style="color:#6B5E58; text-decoration:line-through;">☑ ' + item.nome + ' — já atendido</span>';
+      htmlItens += '<div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-radius:12px; margin-bottom:10px; background-color:#E8F9FC;">';
+      htmlItens += '  <span style="color:#6B5E58; text-decoration:line-through;">☑ ' + item.nome + '</span>';
       htmlItens += '  <span class="etiqueta etiqueta-azul">Já atendido</span>';
       htmlItens += '</div>';
     } else {
-      htmlItens += '<div style="padding:14px 16px; border-radius:12px; margin-bottom:10px; background-color:#FAF7F5; font-weight:700;">';
+      htmlItens += '<div style="padding:12px 14px; border-radius:12px; margin-bottom:10px; background-color:#FAF7F5; font-weight:700;">';
       htmlItens += '  ☐ ' + item.nome + ' (faltam ' + item.qtd + ')';
       htmlItens += '</div>';
     }
@@ -281,9 +354,8 @@ function abrirCampanha(id) {
 function abrirFormularioDoacao() {
   var c = buscarCampanhaPorId(campanhaSelecionadaId);
   document.getElementById('doar-subtitulo').textContent = c.titulo + ' • ' + c.ong;
-  document.getElementById('doar-ponto').value = 'Sede do ' + c.ong + ' - ' + c.endereco;
+  document.getElementById('doar-ponto').value = c.ong + ' - ' + c.endereco;
 
-  // Preenche o select apenas com os itens que ainda não foram atendidos
   var select = document.getElementById('doar-item');
   var opcoes = '';
   for (var i = 0; i < c.itens.length; i++) {
@@ -292,16 +364,15 @@ function abrirFormularioDoacao() {
     }
   }
   select.innerHTML = opcoes;
-
   mostrarTela('tela-doar');
 }
 
-function enviarDoacao() {
+function enviarDoacao(evento) {
+  evento.preventDefault();
   var emailInput = document.getElementById('doar-email');
   var erroBox = document.getElementById('erro-email');
   var email = emailInput.value;
 
-  // Validação simples de e-mail (verifica se tem @ e .)
   if (email.indexOf('@') === -1 || email.indexOf('.') === -1) {
     emailInput.classList.add('erro');
     erroBox.style.display = 'block';
@@ -311,90 +382,64 @@ function enviarDoacao() {
   emailInput.classList.remove('erro');
   erroBox.style.display = 'none';
 
-  // Monta os dados da tela de confirmação
   var item = document.getElementById('doar-item').value;
   var qtd = document.getElementById('doar-quantidade').value;
   var ponto = document.getElementById('doar-ponto').value;
-  var dia = document.getElementById('doar-dia').value;
-  var mes = document.getElementById('doar-mes').value;
-  var ano = document.getElementById('doar-ano').value;
+  var data = document.getElementById('doar-data').value;
+
+  minhasDoacoes.unshift({
+    item: qtd + 'x ' + item,
+    local: ponto,
+    data: data,
+    status: 'Agendada'
+  });
 
   document.getElementById('confirmado-resumo').textContent = 'Você registrou: ' + qtd + 'x ' + item;
   document.getElementById('confirmado-ponto').textContent = 'Ponto de coleta: ' + ponto;
-  document.getElementById('confirmado-data').textContent = 'Data prevista: ' + dia + '/' + mes + '/' + ano;
+  document.getElementById('confirmado-data').textContent = 'Data prevista: ' + data;
 
   mostrarTela('tela-confirmado');
 }
 
-// ============================================
-// 5. LOGIN E LOGOUT
-// ============================================
-function selecionarPerfilLogin(perfil) {
-  perfilLogin = perfil;
-  var abaDoador = document.getElementById('aba-doador');
-  var abaOng = document.getElementById('aba-ong');
-  var campoCnpj = document.getElementById('campo-cnpj');
-
-  if (perfil === 'ong') {
-    abaOng.classList.add('ativo');
-    abaDoador.classList.remove('ativo');
-    campoCnpj.style.display = 'block';
-  } else {
-    abaDoador.classList.add('ativo');
-    abaOng.classList.remove('ativo');
-    campoCnpj.style.display = 'none';
+function desenharMinhasDoacoes() {
+  var caixa = document.getElementById('lista-minhas-doacoes');
+  var html = '';
+  for (var i = 0; i < minhasDoacoes.length; i++) {
+    var d = minhasDoacoes[i];
+    html += '<div style="display:flex; justify-content:space-between; align-items:center; padding:14px; border-radius:12px; background-color:#FAF7F5; margin-bottom:10px; flex-wrap:wrap; gap:10px;">';
+    html += '  <div><strong>' + d.item + '</strong><div style="color:#6B5E58; font-size:13px;">' + d.local + ' • Data: ' + d.data + '</div></div>';
+    html += '  <span class="etiqueta etiqueta-azul">' + d.status + '</span>';
+    html += '</div>';
   }
+  caixa.innerHTML = html;
 }
 
-function fazerLogin() {
-  var botoesTopo = document.getElementById('botoes-usuario');
-  botoesTopo.innerHTML =
-    '<button class="botao botao-primario" onclick="mostrarTela(\'tela-mensagens\')">👤 Minha Conta</button>' +
-    '<button class="botao botao-sair" onclick="fazerLogout()">Sair</button>';
-
-  if (perfilLogin === 'ong') {
-    mostrarTela('tela-ong-dashboard');
-  } else {
-    mostrarTela('tela-home');
-  }
-}
-
-function fazerLogout() {
-  var botoesTopo = document.getElementById('botoes-usuario');
-  botoesTopo.innerHTML = '<button class="botao botao-primario" onclick="mostrarTela(\'tela-login\')">Entrar / Cadastrar</button>';
-  mostrarTela('tela-login');
-}
-
-// ============================================
-// 6. PAINEL DA ONG (DASHBOARD E NOVA CAMPANHA)
-// ============================================
 function desenharDashboardOng() {
   var tabela = document.getElementById('tabela-itens-ong');
   var html = '';
   var totalPendentes = 0;
+  var c = campanhas[0];
 
-  for (var i = 0; i < campanhas.length; i++) {
-    var c = campanhas[i];
-    for (var j = 0; j < c.itens.length; j++) {
-      var item = c.itens[j];
-      if (!item.atendido) {
-        totalPendentes++;
-      }
+  for (var i = 0; i < c.itens.length; i++) {
+    var item = c.itens[i];
+    if (!item.atendido) totalPendentes++;
 
-      html += '<div class="linha-tabela">';
-      html += '  <strong>' + item.nome + '</strong>';
-      html += '  <span>' + item.qtd + '</span>';
-
-      if (item.atendido) {
-        html += '  <span><span class="etiqueta etiqueta-verde">Recebido ✓</span></span>';
-        html += '  <span style="color:#6B5E58; font-size:13px;">Concluído</span>';
-      } else {
-        html += '  <span><span class="etiqueta etiqueta-amarela">Pendente!</span></span>';
-        html += '  <span><button class="botao botao-primario botao-pequeno" onclick="marcarComoAtendido(' + c.id + ',' + item.id + ')">Marcar como Atendido</button></span>';
-      }
-
-      html += '</div>';
+    html += '<div class="linha-tabela">';
+    html += '  <strong>' + item.nome + '</strong>';
+    html += '  <span>' + item.qtd + '</span>';
+    if (item.atendido) {
+      html += '  <span><span class="etiqueta etiqueta-verde">Recebido ✓</span></span>';
+    } else {
+      html += '  <span><span class="etiqueta etiqueta-amarela">Pendente</span></span>';
     }
+    html += '  <div class="acoes-linha">';
+    html += '    <button class="botao botao-editar botao-pequeno" onclick="iniciarEdicao(' + item.id + ')">Editar</button>';
+    html += '    <button class="botao botao-excluir botao-pequeno" onclick="excluirNecessidade(' + item.id + ')">Excluir</button>';
+    if (!item.atendido) {
+      html += '    <button class="botao botao-primario botao-pequeno" onclick="marcarComoAtendido(' + item.id + ')">Recebido</button>';
+    }
+    html += '  </div>';
+    html += '</div>';
   }
 
   tabela.innerHTML = html;
@@ -402,29 +447,90 @@ function desenharDashboardOng() {
   document.getElementById('kpi-campanhas').textContent = campanhas.length;
 }
 
-function marcarComoAtendido(idCampanha, idItem) {
-  var c = buscarCampanhaPorId(idCampanha);
+function salvarNecessidade() {
+  var idEdicao = document.getElementById('crud-id-edicao').value;
+  var nome = document.getElementById('crud-nome').value.trim();
+  var qtd = Number(document.getElementById('crud-qtd').value);
+  if (nome === '' || qtd < 1) return;
+
+  var c = campanhas[0];
+
+  if (idEdicao === '') {
+    c.itens.push({
+      id: Date.now(),
+      nome: nome,
+      qtd: qtd,
+      atendido: false
+    });
+  } else {
+    for (var i = 0; i < c.itens.length; i++) {
+      if (c.itens[i].id === Number(idEdicao)) {
+        c.itens[i].nome = nome;
+        c.itens[i].qtd = qtd;
+      }
+    }
+  }
+
+  cancelarEdicao();
+  desenharDashboardOng();
+}
+
+function iniciarEdicao(idItem) {
+  var c = campanhas[0];
+  for (var i = 0; i < c.itens.length; i++) {
+    if (c.itens[i].id === idItem) {
+      document.getElementById('crud-id-edicao').value = c.itens[i].id;
+      document.getElementById('crud-nome').value = c.itens[i].nome;
+      document.getElementById('crud-qtd').value = c.itens[i].qtd;
+      document.getElementById('titulo-form-crud').textContent = 'Editar Necessidade';
+      document.getElementById('btn-salvar-crud').textContent = 'Salvar Alteração';
+      document.getElementById('btn-cancelar-crud').style.display = 'inline-flex';
+    }
+  }
+}
+
+function cancelarEdicao() {
+  document.getElementById('crud-id-edicao').value = '';
+  document.getElementById('crud-nome').value = '';
+  document.getElementById('crud-qtd').value = 1;
+  document.getElementById('titulo-form-crud').textContent = 'Cadastrar Nova Necessidade';
+  document.getElementById('btn-salvar-crud').textContent = 'Adicionar';
+  document.getElementById('btn-cancelar-crud').style.display = 'none';
+}
+
+function excluirNecessidade(idItem) {
+  var c = campanhas[0];
+  var novaLista = [];
+  for (var i = 0; i < c.itens.length; i++) {
+    if (c.itens[i].id !== idItem) {
+      novaLista.push(c.itens[i]);
+    }
+  }
+  c.itens = novaLista;
+  desenharDashboardOng();
+}
+
+function marcarComoAtendido(idItem) {
+  var c = campanhas[0];
   for (var i = 0; i < c.itens.length; i++) {
     if (c.itens[i].id === idItem) {
       c.itens[i].atendido = true;
-      c.progresso = c.progresso + 15;
-      if (c.progresso > 100) c.progresso = 100;
     }
   }
   desenharDashboardOng();
 }
 
 function publicarCampanha() {
-  var titulo = document.getElementById('nova-titulo').value;
+  var titulo = document.getElementById('nova-titulo').value.trim();
   var categoria = document.getElementById('nova-categoria').value;
-  var nomeItem = document.getElementById('nova-item').value;
-  var qtd = document.getElementById('nova-qtd').value;
+  var nomeItem = document.getElementById('nova-item').value.trim();
+  var qtd = Number(document.getElementById('nova-qtd').value);
 
   if (titulo === '') titulo = 'Nova Campanha Solidária';
   if (nomeItem === '') nomeItem = 'Item essencial';
 
-  var novaCampanha = {
-    id: campanhas.length + 1,
+  campanhas.unshift({
+    id: Date.now(),
     titulo: titulo,
     ong: 'Abrigo Esperança',
     endereco: 'Rua Exemplo, 100 - Centro',
@@ -434,18 +540,12 @@ function publicarCampanha() {
     progresso: 0,
     icone: '🎁',
     resumo: nomeItem,
-    itens: [
-      { id: Date.now(), nome: nomeItem, qtd: Number(qtd), atendido: false }
-    ]
-  };
+    itens: [{ id: Date.now() + 1, nome: nomeItem, qtd: qtd, atendido: false }]
+  });
 
-  campanhas.unshift(novaCampanha);
   mostrarTela('tela-ong-dashboard');
 }
 
-// ============================================
-// 7. CHAT DE MENSAGENS
-// ============================================
 function desenharChat() {
   var lista = document.getElementById('lista-conversas');
   var htmlLista = '';
@@ -453,10 +553,7 @@ function desenharChat() {
 
   for (var i = 0; i < conversas.length; i++) {
     var conv = conversas[i];
-    if (conv.id === conversaAtualId) {
-      conversaAtual = conv;
-    }
-
+    if (conv.id === conversaAtualId) conversaAtual = conv;
     var classeAtiva = conv.id === conversaAtualId ? 'ativa' : '';
     var ultimaMsg = conv.mensagens[conv.mensagens.length - 1].texto;
 
@@ -467,7 +564,6 @@ function desenharChat() {
   }
   lista.innerHTML = htmlLista;
 
-  // Mostra as mensagens da conversa selecionada
   document.getElementById('chat-nome-ong').textContent = conversaAtual.ong;
   var bolhas = '';
   for (var j = 0; j < conversaAtual.mensagens.length; j++) {
@@ -493,10 +589,80 @@ function enviarMensagem() {
       conversas[i].mensagens.push({ tipo: 'enviada', texto: texto, hora: 'Agora ✓✓' });
     }
   }
-
   campo.value = '';
   desenharChat();
 }
 
-// Inicia desenhando as campanhas na página inicial
+function desenharPainelDc() {
+  var caixa = document.getElementById('lista-regioes-dc');
+  var html = '';
+  for (var i = 0; i < regioesDc.length; i++) {
+    var r = regioesDc[i];
+    var cor = r.nivel === 'Crítico' ? 'etiqueta-vermelha' : 'etiqueta-amarela';
+    html += '<article class="card">';
+    html += '  <span class="etiqueta ' + cor + '" style="margin-bottom:10px;">Nível: ' + r.nivel + '</span>';
+    html += '  <h2 class="titulo-destaque" style="font-size:20px; margin-bottom:6px;">' + r.nome + '</h2>';
+    html += '  <p style="color:#6B5E58; font-size:14px;">Ocorrência: <strong>' + r.ocorrencia + '</strong></p>';
+    html += '  <p style="color:#6B5E58; font-size:14px;">Famílias atendidas: <strong>' + r.familias + '</strong></p>';
+    html += '</article>';
+  }
+  caixa.innerHTML = html;
+}
+
+function criarEmergenciaDc() {
+  var tipo = document.getElementById('dc-tipo').value;
+  var regiao = document.getElementById('dc-regiao').value.trim();
+  var itens = document.getElementById('dc-itens').value.trim();
+  if (regiao === '') regiao = 'Região Central';
+  if (itens === '') itens = 'Água potável e alimentos';
+
+  regioesDc.unshift({ nome: regiao, ocorrencia: tipo, nivel: 'Crítico', familias: 15 });
+  campanhas.unshift({
+    id: Date.now(),
+    titulo: 'Emergência ' + tipo + ' - ' + regiao,
+    ong: 'Defesa Civil Municipal',
+    endereco: 'Ponto de Apoio - ' + regiao,
+    horario: 'Todos os dias, 24h',
+    categoria: 'Emergência',
+    urgencia: 'Alta',
+    progresso: 10,
+    icone: '🚨',
+    resumo: itens,
+    itens: [{ id: Date.now() + 1, nome: itens, qtd: 20, atendido: false }]
+  });
+
+  mostrarTela('tela-dc-painel');
+}
+
+function desenharAprovacaoAdmin() {
+  var caixa = document.getElementById('lista-aprovacao-admin');
+  var html = '';
+  for (var i = 0; i < pendenciasAdmin.length; i++) {
+    var p = pendenciasAdmin[i];
+    html += '<div style="display:flex; justify-content:space-between; align-items:center; padding:14px; border-radius:12px; background-color:#FAF7F5; margin-bottom:10px; flex-wrap:wrap; gap:10px;">';
+    html += '  <div><strong>' + p.nome + '</strong><div style="color:#6B5E58; font-size:13px;">' + p.tipo + ' • CNPJ: ' + p.cnpj + '</div></div>';
+    if (p.status === 'Pendente') {
+      html += '  <div class="acoes-linha">';
+      html += '    <button class="botao botao-primario botao-pequeno" onclick="alterarStatusAdmin(' + p.id + ', \'Aprovado\')">Aprovar</button>';
+      html += '    <button class="botao botao-excluir botao-pequeno" onclick="alterarStatusAdmin(' + p.id + ', \'Rejeitado\')">Rejeitar</button>';
+      html += '  </div>';
+    } else {
+      var cor = p.status === 'Aprovado' ? 'etiqueta-verde' : 'etiqueta-vermelha';
+      html += '  <span class="etiqueta ' + cor + '">' + p.status + '</span>';
+    }
+    html += '</div>';
+  }
+  caixa.innerHTML = html;
+}
+
+function alterarStatusAdmin(id, novoStatus) {
+  for (var i = 0; i < pendenciasAdmin.length; i++) {
+    if (pendenciasAdmin[i].id === id) {
+      pendenciasAdmin[i].status = novoStatus;
+    }
+  }
+  desenharAprovacaoAdmin();
+}
+
+atualizarMenu();
 desenharCampanhasHome();
