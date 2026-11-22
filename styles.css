@@ -9,6 +9,13 @@ body {
   background-color: #FAF7F5;
   color: #241C18;
   line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
 }
 
 a {
@@ -593,7 +600,7 @@ button, input, select, textarea {
 .rodape {
   background-color: #8C5535;
   color: #FFFFFF;
-  padding: 44px 48px 28px;
+  padding: 28px 48px;
 }
 
 .rodape-topo {
@@ -601,12 +608,12 @@ button, input, select, textarea {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 32px;
-  margin-bottom: 24px;
+  padding-bottom: 20px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .rodape-base {
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  padding-top: 18px;
   font-size: 13px;
   color: #F5EDE8;
 }
