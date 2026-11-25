@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABRAÇO • Rede Solidária</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <a class="logo-area" href="home.html">
+      <span class="logo-caixa">ABRAÇO</span>
+      <span class="logo-texto">Rede Solidária</span>
+    </a>
+    <nav class="menu-links" id="menu-principal" aria-label="Navegação principal"></nav>
+    <div class="menu-botoes" id="botoes-usuario"></div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <span class="etiqueta etiqueta-rosa-claro">● Campanhas sociais e emergenciais em tempo real</span>
+      <h1>AJUDE QUEM PRECISA,<br />SEM DESPERDÍCIO.</h1>
+      <p>Encontre necessidades reais de entidades verificadas e campanhas emergenciais de enchentes, deslizamentos, secas e incêndios perto de você.</p>
+
+      <div class="barra-busca">
+        <span aria-hidden="true">🔍</span>
+        <input id="campo-busca-home" type="text" aria-label="Buscar necessidade ou campanha" placeholder="O que você quer doar hoje? (ex: casaco, água, alimentos, caderno...)" oninput="desenharCampanhasHome()" />
+        <button class="botao botao-primario" onclick="irParaBusca()">Buscar</button>
+      </div>
+
+      <div class="filtros-rapidos">
+        <button class="chip ativo" onclick="mudarCategoria('Todas', this)">Todas</button>
+        <button class="chip" onclick="mudarCategoria('Alimentos', this)">Alimentos</button>
+        <button class="chip" onclick="mudarCategoria('Roupas', this)">Roupas</button>
+        <button class="chip" onclick="mudarCategoria('Material Escolar', this)">Material Escolar</button>
+        <button class="chip chip-urgente" onclick="mudarCategoria('Emergência', this)">🚨 Emergência</button>
+      </div>
+    </section>
+
+    <section class="container">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+        <h2 class="titulo-destaque" style="font-size:28px;">Campanhas em Destaque</h2>
+        <a style="color:#8C5535; font-weight:700;" href="buscar.html">Ver todas as campanhas →</a>
+      </div>
+      <div id="lista-campanhas-home" class="grade-3"></div>
+    </section>
+
+    <section style="background-color:#FFFFFF; padding:48px 0;">
+      <div class="container" style="padding-top:0; padding-bottom:0;">
+        <h2 class="titulo-destaque" style="font-size:26px; margin-bottom:24px;">Como Funciona a Plataforma</h2>
+        <div class="grade-3">
+          <article class="card" style="background-color:#FAF7F5; box-shadow:none;">
+            <span class="etiqueta etiqueta-azul" style="margin-bottom:12px;">Passo 1</span>
+            <h3 style="font-size:18px; margin-bottom:6px;">Encontre uma campanha</h3>
+            <p style="color:#6B5E58; font-size:14px;">Pesquise por bairro, categoria ou campanhas emergenciais ativas.</p>
+          </article>
+          <article class="card" style="background-color:#FAF7F5; box-shadow:none;">
+            <span class="etiqueta etiqueta-rosa" style="margin-bottom:12px;">Passo 2</span>
+            <h3 style="font-size:18px; margin-bottom:6px;">Registre sua doação</h3>
+            <p style="color:#6B5E58; font-size:14px;">Escolha o item que ainda falta e agende a entrega sem desperdícios.</p>
+          </article>
+          <article class="card" style="background-color:#FAF7F5; box-shadow:none;">
+            <span class="etiqueta etiqueta-coral" style="margin-bottom:12px;">Passo 3</span>
+            <h3 style="font-size:18px; margin-bottom:6px;">Entregue com confiança</h3>
+            <p style="color:#6B5E58; font-size:14px;">A entidade confirma o recebimento e atualiza o status para toda a comunidade.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="secao-sobre">
+      <article class="sobre-esquerda">
+        <h2 class="titulo-destaque" style="font-size:30px;">Sobre a Rede Abraço</h2>
+        <p>A Rede Abraço é uma plataforma web de doações e solidariedade criada para aproximar cidadãos, entidades beneficentes e administradores da rede. Com foco em transparência e acessibilidade, evita excesso de itens e agiliza o atendimento em campanhas urgentes.</p>
+        <a class="botao botao-coral" href="../index.html">Acessar minha conta →</a>
+      </article>
+      <div class="sobre-direita">
+        <div class="card-numero"><span class="numero-destaque" style="color:#8C5535;">+500</span><strong>Doações entregues com transparência</strong></div>
+        <div class="card-numero"><span class="numero-destaque" style="color:#41BDD9;">18</span><strong>Entidades verificadas e ativas</strong></div>
+        <div class="card-numero"><span class="numero-destaque" style="color:#F26D91;">24h</span><strong>Monitoramento de campanhas emergenciais</strong></div>
+      </div>
+    </section>
+
+    <section class="container">
+      <h2 class="titulo-destaque" style="font-size:26px; margin-bottom:24px;">Transparência e Orientações</h2>
+      <div class="grade-4">
+        <article class="card"><h3 style="color:#8C5535; font-size:16px; margin-bottom:8px;">Como funciona a entrega?</h3><p style="color:#6B5E58; font-size:14px;">Você registra sua intenção e entrega na data combinada no ponto de coleta indicado.</p></article>
+        <article class="card"><h3 style="color:#8C5535; font-size:16px; margin-bottom:8px;">Selo Entidade Verificada</h3><p style="color:#6B5E58; font-size:14px;">Todas as entidades passam por aprovação administrativa antes de receber doações.</p></article>
+        <article class="card"><h3 style="color:#8C5535; font-size:16px; margin-bottom:8px;">Emergências Ambientais</h3><p style="color:#6B5E58; font-size:14px;">Campanhas rápidas para enchentes, deslizamentos, secas e incêndios com itens prioritários.</p></article>
+        <article class="card"><h3 style="color:#8C5535; font-size:16px; margin-bottom:8px;">Controle sem desperdício</h3><p style="color:#6B5E58; font-size:14px;">Itens já atendidos ficam marcados para direcionar ajuda ao que realmente falta.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape-topo">
+      <div>
+        <h2 class="titulo-destaque" style="font-size:22px; margin-bottom:8px;">ABRAÇO Solidário</h2>
+        <p style="color:#F5EDE8; max-width:440px; font-size:15px;">Plataforma web de doações e solidariedade conectando cidadãos e entidades verificadas.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="color:#F29985; font-size:13px; font-weight:800;">MENU</span>
+        <a href="home.html">Início</a>
+        <a href="buscar.html">Campanhas</a>
+        <a href="../index.html">Entrar no Sistema</a>
+      </div>
+    </div>
+    <div class="rodape-base">© 2026 ABRAÇO Rede Solidária • Projeto Interdisciplinar de Desenvolvimento Web</div>
+  </footer>
+  <script src="../app.js"></script>
+</body>
+</html>

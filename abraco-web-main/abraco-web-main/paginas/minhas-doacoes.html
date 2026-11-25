@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABRAÇO • Minhas Doações</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <a class="logo-area" href="home.html">
+      <span class="logo-caixa">ABRAÇO</span>
+      <span class="logo-texto">Rede Solidária</span>
+    </a>
+    <nav class="menu-links" id="menu-principal" aria-label="Navegação principal"></nav>
+    <div class="menu-botoes" id="botoes-usuario"></div>
+  </header>
+
+  <main class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h1 class="titulo-destaque" style="font-size:28px;">Minhas Doações</h1>
+        <p style="color:#6B5E58; font-size:14px;">Acompanhe o status das suas intenções de doação</p>
+      </div>
+      <a class="botao botao-primario" href="buscar.html">+ Nova Doação</a>
+    </div>
+    <div id="lista-minhas-doacoes" class="card"></div>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape-base">© 2026 ABRAÇO Rede Solidária • Projeto Interdisciplinar de Desenvolvimento Web</div>
+  </footer>
+  <script src="../app.js"></script>
+</body>
+</html>

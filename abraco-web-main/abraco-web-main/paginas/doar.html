@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABRAÇO • Registrar Doação</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <a class="logo-area" href="home.html">
+      <span class="logo-caixa">ABRAÇO</span>
+      <span class="logo-texto">Rede Solidária</span>
+    </a>
+    <nav class="menu-links" id="menu-principal" aria-label="Navegação principal"></nav>
+    <div class="menu-botoes" id="botoes-usuario"></div>
+  </header>
+
+  <main>
+    <section class="card-central">
+      <h1 class="titulo-destaque" style="font-size:28px; margin-bottom:6px;">Registrar Intenção de Doação</h1>
+      <div id="doar-subtitulo" style="color:#8C5535; font-weight:700; margin-bottom:22px;"></div>
+
+      <form onsubmit="enviarDoacao(event)">
+        <div class="campo-form">
+          <label for="doar-nome">Nome completo</label>
+          <input id="doar-nome" class="input-texto" type="text" value=" " required />
+        </div>
+        <div class="campo-form">
+          <label for="doar-email">E-mail</label>
+          <input id="doar-email" class="input-texto" type="text" value=" " placeholder="exemplo@dominio.com" />
+          <div id="erro-email" class="mensagem-erro">⚠ Informe um e-mail válido, por exemplo: nome@email.com</div>
+        </div>
+        <div class="campo-form">
+          <label for="doar-telefone">Telefone / WhatsApp</label>
+          <input id="doar-telefone" class="input-texto" type="text" value=" " required />
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 120px; gap:12px;" class="campo-form">
+          <div>
+            <label for="doar-item">Item que vai doar</label>
+            <select id="doar-item" class="input-texto"></select>
+          </div>
+          <div>
+            <label for="doar-quantidade">Quantidade</label>
+            <input id="doar-quantidade" class="input-texto" type="number" min="1" value=" " required />
+          </div>
+        </div>
+        <div class="campo-form">
+          <label for="doar-data">Data prevista de entrega</label>
+          <input id="doar-data" class="input-texto" type="date" value="" required />
+        </div>
+        <div class="campo-form">
+          <label for="doar-ponto">Ponto de Coleta</label>
+          <input id="doar-ponto" class="input-texto" type="text" required />
+        </div>
+        <div style="display:flex; gap:12px; margin-top:20px; flex-wrap:wrap;">
+          <button type="submit" class="botao botao-primario botao-grande">Confirmar Doação</button>
+          <a class="botao botao-claro botao-grande" href="campanha.html">Cancelar</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape-base">© 2026 ABRAÇO Rede Solidária • Projeto Interdisciplinar de Desenvolvimento Web</div>
+  </footer>
+  <script src="../app.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABRAÇO • Mensagens</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <a class="logo-area" href="home.html">
+      <span class="logo-caixa">ABRAÇO</span>
+      <span class="logo-texto">Rede Solidária</span>
+    </a>
+    <nav class="menu-links" id="menu-principal" aria-label="Navegação principal"></nav>
+    <div class="menu-botoes" id="botoes-usuario"></div>
+  </header>
+
+  <main class="layout-painel">
+    <aside class="sidebar">
+      <div>
+        <div class="titulo-destaque" style="font-size:20px;">ABRAÇO ENTIDADE</div>
+        <div style="color:#F29985; font-size:13px; font-weight:700;">Abrigo Esperança</div>
+        <div class="sidebar-lista">
+          <a class="sidebar-item" href="ong-dashboard.html">Necessidades</a>
+          <a class="sidebar-item" href="ong-nova.html">Nova Campanha</a>
+          <a class="sidebar-item ativo" href="mensagens.html">Mensagens</a>
+        </div>
+      </div>
+    </aside>
+
+    <section class="conteudo-painel">
+      <div class="layout-chat">
+        <div class="card">
+          <h1 class="titulo-destaque" style="font-size:20px; margin-bottom:14px;">Conversas</h1>
+          <div id="lista-conversas"></div>
+        </div>
+        <div class="card painel-mensagens">
+          <div>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px;">
+              <h2 id="chat-nome-ong" class="titulo-destaque" style="font-size:20px;">Abrigo Esperança</h2>
+              <span class="etiqueta etiqueta-verde">✓ Verificada</span>
+            </div>
+            <div id="chat-bolhas" style="display:flex; flex-direction:column;"></div>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <input id="campo-mensagem" class="input-texto" style="border-radius:999px;" aria-label="Digite sua mensagem" placeholder="Digite sua mensagem..." />
+            <button class="botao botao-primario" onclick="enviarMensagem()">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape-base">© 2026 ABRAÇO Rede Solidária • Projeto Interdisciplinar de Desenvolvimento Web</div>
+  </footer>
+  <script src="../app.js"></script>
+</body>
+</html>
